@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using OverTheSky.Core;
 using UnityEngine;
 
 namespace OverTheSky.Systems
@@ -9,10 +10,11 @@ namespace OverTheSky.Systems
         [SerializeField] private GameObject _checkPoint;
 
         // Player태그를 가진 유저가 닿으면 등록
-        private void OnCollisionEnter(Collision collision)
+        private void OnTriggerEnter(Collider other)
         {
-            if (collision.gameObject.CompareTag("Player"))
+            if (other.CompareTag("Player"))
             {
+                CheckpointManager.Instance.RegisterCheckpoint(transform.position, transform.rotation, this);
                 ChangeCheckPoint();
             }
         }
