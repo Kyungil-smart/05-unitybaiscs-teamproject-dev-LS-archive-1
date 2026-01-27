@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - CinemachineTarget
+  - Platform
+  - Obstacle
+  - Checkpoint
   layers:
   - Default
   - TransparentFX
@@ -14,7 +17,7 @@ TagManager:
   - UI
   - Player
   - Wall
-  - 
+  - Obstacle
   - 
   - PostProcess
   - 
