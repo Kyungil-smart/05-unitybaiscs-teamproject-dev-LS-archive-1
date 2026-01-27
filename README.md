@@ -9,7 +9,7 @@
 ## 작업노트
 
 이성규<br>
-[![작업노트-이성규](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](https://github.com/Kyungil-smart/05-unitybaiscs-teamproject-dev-LS-archive-1/blob/develop/Docs/OverTheSky%20%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20%EC%97%AD%ED%95%A0%20%EB%B6%84%EB%8B%B4%20%EB%AC%B8%EC%84%9C.md)
+[![작업노트-이성규](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](https://github.com/Kyungil-smart/05-unitybaiscs-teamproject-dev-LS-archive-1/blob/develop/Docs/%EB%AC%B8%EC%84%9C%EC%A0%95%EB%A6%AC_%EC%9D%B4%EC%84%B1%EA%B7%9C/8%ED%8C%80%20%EC%9D%B4%EC%84%B1%EA%B7%9C%20%EC%9E%91%EC%97%85%20%EB%85%B8%ED%8A%B8(OverTheSky).md)
 
 김동현<br>
 [![작업노트-김동현](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs)
