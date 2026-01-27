@@ -32,11 +32,11 @@ namespace OverTheSky.Core
         // 애니메이터 파라미터 이름 (SetBool/SetFloat 할 때)
         public static class Anim
         {
-            public const string IsGrounded = "IsGrounded";
-            public const string IsRunning = "IsRunning";
-            public const string JumpTrigger = "Jump";
             public const string Speed = "Speed";
-            public const string DieTrigger = "Die";
+            public const string IsJump = "Jump";
+            public const string IsGrounded = "Grounded";
+            public const string IsFalling = "FreeFall";
+            public const string MotionSpeed = "MotionSpeed";
         }
     }
 
