@@ -13,7 +13,6 @@ namespace OverTheSky.UI
         
         private void Update()
         {
-            _messageText.color = Color.red;
             _messageText.text = "Respawn (R)";
         }
     }
