@@ -7,13 +7,14 @@ public class CircularPlatform : MonoBehaviour
     [SerializeField][Range(0, 100)] private float _rotateSpeed;
     [SerializeField] private GameObject _pivot;
 
-    private void Update()
+    private void FixedUpdate()
     {
         Rotate();
     }
 
     private void Rotate()
     {
+        // pivot의 Y축을 기준으로 다른 오브젝트가 공전을 할 수 있도록 함
         transform.RotateAround(_pivot.transform.position, Vector3.up, _rotateSpeed * Time.deltaTime);
     }
 }
