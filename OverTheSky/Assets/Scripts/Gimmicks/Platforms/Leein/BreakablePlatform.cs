@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-[CreateAssetMenu(fileName = "DestroyGimmic", menuName = "DestroyGimmic/Gimmic", order = 1)]
-public class Gimmitest : DestroyPlatformsBase
+[CreateAssetMenu(fileName = "BreakablePlatform_", menuName = "DestroyGimmic/BreakablePlatform", order = 1)]
+public class BreakablePlatform : DestroyPlatformsBase
 {
     private DestroyPlatforms m_owner;
     private GameObject m_invisible;
@@ -27,7 +27,7 @@ public class Gimmitest : DestroyPlatformsBase
         m_invisible.SetActive(false);
     }
 
-    public override IEnumerator WarningColorRoutine(Renderer render)
+    public override IEnumerator RunForSeconds(Renderer render)
     {
         float elapsed = 0f;
         Material mat = render.material;

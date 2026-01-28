@@ -47,6 +47,6 @@ public abstract class DestroyPlatformsBase : ScriptableObject
     public abstract void Init(DestroyPlatforms Owner,GameObject invisible_Object);
     //
 
- 
-    public abstract IEnumerator WarningColorRoutine(Renderer render);
+    //기다리는 시간동안 실행되는 내용들
+    public abstract IEnumerator RunForSeconds(Renderer render);
 }

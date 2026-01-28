@@ -48,7 +48,7 @@ public class DestroyPlatforms : MonoBehaviour
     {
         while (true)
         {
-            yield return StartCoroutine(_platforms.WarningColorRoutine(targetRenderer));
+            yield return StartCoroutine(_platforms.RunForSeconds(targetRenderer));
 
             _platforms.OnGimmic();
 
@@ -58,13 +58,10 @@ public class DestroyPlatforms : MonoBehaviour
 
     }
 
-    private void OnEnable()
-    {
-        StartCoroutine(StartGimmic());
-    }
+    //테스트 용 
+    private void OnEnable() => StartCoroutine(StartGimmic());
 
-    private void OnDisable()
-    {
-        _active.ActiveSelf(_platforms.respawnTime);
-    }
+    //오브젝트 비활성화 되면 기존에 설정한 시간 뒤에 오브젝트 재활성화
+    private void OnDisable() => _active.ActiveSelf(_platforms.respawnTime);
+
 }
