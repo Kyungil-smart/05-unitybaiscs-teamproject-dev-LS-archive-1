@@ -33,9 +33,9 @@ public abstract class DestroyPlatformsBase : ScriptableObject
     [SerializeField] private float m_Time = 0f;
     public float Time => m_Time;
 
-    //코루틴이 반복하는지 안하는지
-    [SerializeField] private bool m_repeat = false;
-    public bool repeat => m_repeat;
+    //플레이어에 의해 발동되는 트리거 인지 아니면 주기적으로 발생하는지 판별하는 bool
+    [SerializeField] private bool m_isTriggeredByPlayer = false;
+    public bool isTriggeredByPlayer => m_isTriggeredByPlayer;
 
     //비활성화 된 후 몇 초뒤에 다시 활성화 될것인지
     [SerializeField] private float m_respawnTime = 0f;
@@ -44,9 +44,9 @@ public abstract class DestroyPlatformsBase : ScriptableObject
     //플레이어가 발판 밟았을 때 N초 뒤에 게임오브젝트 비활성
     public abstract void OnGimmic();
 
-    public abstract void Init(DestroyPlatforms Owner,GameObject invisible_Object);
-    //
+    //내부 초기화 용
+    public abstract void Init(DestroyPlatforms Owner,GameObject invisible_Object, ObjectSetActive objectSetActive);
 
- 
-    public abstract IEnumerator WarningColorRoutine(Renderer render);
+    //기다리는 시간동안 실행되는 내용들
+    public abstract IEnumerator RunForSeconds(Renderer render);
 }
