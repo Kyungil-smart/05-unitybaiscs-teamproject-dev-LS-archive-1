@@ -22,15 +22,14 @@ public class DestroyPlatforms : MonoBehaviour
     private void Awake()
     {
         _platforms = Instantiate(_platforms);
-        if (Seconds != null) return;
+        if (Seconds != null ) return;
         targetRenderer = GetComponent<Renderer>();
          Seconds = new(_platforms.Time);
 
         //발판 초기화 :  주체가 되는 오브젝트 탐색하기위해 자신과,비활성할 게임오브젝트 초기화
-        _platforms.Init(this, this.gameObject);
+        _platforms.Init(this, this.gameObject, _active);
     }
 
- 
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -38,12 +37,13 @@ public class DestroyPlatforms : MonoBehaviour
         //밟았다가 다시 밟아서 한번 더 실행되지 않게 설정 
         if (collision.gameObject.CompareTag("Platform"))
         {
+            _active.ActiveSelf(_platforms.respawnTime);
             this.gameObject.SetActive(false);
+            return;
         }
 
-
-        if (CurrentCoroutine != null) return;
-        CurrentCoroutine = StartCoroutine(StartGimmic());
+        if (CurrentCoroutine != null || !_platforms.isTriggeredByPlayer) return;
+             CurrentCoroutine = StartCoroutine(StartGimmic());
 
 
     }
@@ -77,10 +77,11 @@ public class DestroyPlatforms : MonoBehaviour
 
     private void DisableAction()
     {
+        
         targetRenderer.material.color = Color.white;
         StopAllCoroutines();
         CurrentCoroutine = null;
-        _active.ActiveSelf(_platforms.respawnTime);
+       
     }
 
     

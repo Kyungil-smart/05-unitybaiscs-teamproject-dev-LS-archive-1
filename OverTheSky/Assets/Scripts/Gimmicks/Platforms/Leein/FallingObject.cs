@@ -10,7 +10,7 @@ public class FallingObject : DestroyPlatformsBase
     private WaitForSeconds seconds;
     [SerializeField] private float _AddForcePower;
 
-    public override void Init(DestroyPlatforms Owner, GameObject invisible_Object)
+    public override void Init(DestroyPlatforms Owner, GameObject invisible_Object, ObjectSetActive _active)
     {
         m_Owner=Owner;
         _rigid= invisible_Object.GetComponent<Rigidbody>();

@@ -7,7 +7,7 @@ public class BreakablePlatform : DestroyPlatformsBase
 {
     private DestroyPlatforms m_owner;
     private GameObject m_invisible;
-
+    ObjectSetActive _active;
     #region
     [SerializeField] private Renderer targetRenderer;
 
@@ -15,15 +15,17 @@ public class BreakablePlatform : DestroyPlatformsBase
     [SerializeField] private Color startColor = Color.white;
     [SerializeField] private Color targetColor = Color.red;
     #endregion
-    public override void Init(DestroyPlatforms Owner, GameObject invisible_Object)
+    public override void Init(DestroyPlatforms Owner, GameObject invisible_Object, ObjectSetActive _active)
     {
         m_owner=Owner;
         m_invisible=invisible_Object;
+        this._active = _active;
     }
 
     public override void OnGimmic()
     {
         Debug.Log("종료");
+        _active?.ActiveSelf(respawnTime);
         m_invisible.SetActive(false);
     }
 
