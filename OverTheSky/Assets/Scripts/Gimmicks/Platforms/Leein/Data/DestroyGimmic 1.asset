@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: DestroyGimmic 1
   m_EditorClassIdentifier: 
   m_Time: 0
-  m_repeat: 0
+  m_isTriggeredByPlayer: 1
   m_respawnTime: 2

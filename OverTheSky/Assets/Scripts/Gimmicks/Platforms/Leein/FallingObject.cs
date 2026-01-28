@@ -9,6 +9,7 @@ public class FallingObject : DestroyPlatformsBase
     private Rigidbody _rigid;
     private WaitForSeconds seconds;
     [SerializeField] private float _AddForcePower;
+
     public override void Init(DestroyPlatforms Owner, GameObject invisible_Object)
     {
         m_Owner=Owner;
@@ -26,7 +27,8 @@ public class FallingObject : DestroyPlatformsBase
     public override void OnGimmic()
     {
        
-        _rigid.AddForce(Vector3.down * _AddForcePower, ForceMode.VelocityChange);
-        Debug.Log($"{Time}뒤에 실행");
+          _rigid.AddForce(Vector3.down * _AddForcePower, ForceMode.VelocityChange);
+          Debug.Log($"{Time}뒤에 실행");
+ 
     }
 }

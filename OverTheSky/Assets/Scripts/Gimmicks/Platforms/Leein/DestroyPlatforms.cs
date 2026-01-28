@@ -21,6 +21,7 @@ public class DestroyPlatforms : MonoBehaviour
     #endregion
     private void Awake()
     {
+        _platforms = Instantiate(_platforms);
         if (Seconds != null) return;
         targetRenderer = GetComponent<Renderer>();
          Seconds = new(_platforms.Time);
@@ -29,13 +30,7 @@ public class DestroyPlatforms : MonoBehaviour
         _platforms.Init(this, this.gameObject);
     }
 
-    private void Start()
-    {
-        //테스트용 코드입니다.
-        //if (CurrentCoroutine != null) return;
-        //CurrentCoroutine = StartCoroutine(StartGimmic());
-        StartCoroutine(StartGimmic());
-    }
+ 
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -47,38 +42,46 @@ public class DestroyPlatforms : MonoBehaviour
         }
 
 
-         //if (CurrentCoroutine != null) return;
-         //   CurrentCoroutine = StartCoroutine(StartGimmic());
+        if (CurrentCoroutine != null) return;
+        CurrentCoroutine = StartCoroutine(StartGimmic());
 
-      
+
     }
     
 
     private IEnumerator StartGimmic()
     {
-        while (true)
-        {
             yield return StartCoroutine(_platforms.RunForSeconds(targetRenderer));
-
             _platforms.OnGimmic();
-
-           
-        }
-
     }
 
     //테스트 용 
     private void OnEnable()
     {
-        this.transform.localPosition=new Vector3(0,0,0);
-        StartCoroutine(StartGimmic());
+        EnableAction();
     }
-    //오브젝트 비활성화 되면 기존에 설정한 시간 뒤에 오브젝트 재활성화
     private void OnDisable()
     {
+        DisableAction();
+    }
+
+    private void EnableAction()
+    {
+        this.transform.localPosition = new Vector3(0, 0, 0);
+        if (!_platforms.isTriggeredByPlayer)
+            StartCoroutine(StartGimmic());
+    }
+
+    //오브젝트 비활성화 되면 기존에 설정한 시간 뒤에 오브젝트 재활성화
+   
+
+    private void DisableAction()
+    {
+        targetRenderer.material.color = Color.white;
         StopAllCoroutines();
         CurrentCoroutine = null;
         _active.ActiveSelf(_platforms.respawnTime);
     }
 
+    
 }

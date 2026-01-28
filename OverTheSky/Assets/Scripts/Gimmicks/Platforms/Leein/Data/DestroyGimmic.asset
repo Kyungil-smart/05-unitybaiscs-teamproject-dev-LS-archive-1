@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DestroyGimmic
   m_EditorClassIdentifier: 
   m_Time: 1.5
-  m_repeat: 0
+  m_isTriggeredByPlayer: 1
   m_respawnTime: 3
   targetRenderer: {fileID: 0}
   startColor: {r: 1, g: 1, b: 1, a: 1}
