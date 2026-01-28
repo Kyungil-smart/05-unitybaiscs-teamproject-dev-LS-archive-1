@@ -33,9 +33,7 @@ public abstract class DestroyPlatformsBase : ScriptableObject
     [SerializeField] private float m_Time = 0f;
     public float Time => m_Time;
 
-    //코루틴이 반복하는지 안하는지
-    [SerializeField] private bool m_repeat = false;
-    public bool repeat => m_repeat;
+    
 
     //비활성화 된 후 몇 초뒤에 다시 활성화 될것인지
     [SerializeField] private float m_respawnTime = 0f;

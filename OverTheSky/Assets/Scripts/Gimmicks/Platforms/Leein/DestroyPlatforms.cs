@@ -9,6 +9,8 @@ public class DestroyPlatforms : MonoBehaviour
 {
     [SerializeField] private DestroyPlatformsBase _platforms;
     [SerializeField] private ObjectSetActive _active;
+     
+
     private Coroutine CurrentCoroutine;
     private WaitForSeconds Seconds;
 
@@ -39,8 +41,16 @@ public class DestroyPlatforms : MonoBehaviour
     {
         //플레이가 발판 밟았을 때 실행용
         //밟았다가 다시 밟아서 한번 더 실행되지 않게 설정 
-        if (CurrentCoroutine != null) return;
-         CurrentCoroutine = StartCoroutine(StartGimmic());
+        if (collision.gameObject.CompareTag("Platform"))
+        {
+            this.gameObject.SetActive(false);
+        }
+
+
+         //if (CurrentCoroutine != null) return;
+         //   CurrentCoroutine = StartCoroutine(StartGimmic());
+
+      
     }
     
 
@@ -52,16 +62,23 @@ public class DestroyPlatforms : MonoBehaviour
 
             _platforms.OnGimmic();
 
-            if (!_platforms.repeat)
-                yield break;
+           
         }
 
     }
 
     //테스트 용 
-    private void OnEnable() => StartCoroutine(StartGimmic());
-
+    private void OnEnable()
+    {
+        this.transform.localPosition=new Vector3(0,0,0);
+        StartCoroutine(StartGimmic());
+    }
     //오브젝트 비활성화 되면 기존에 설정한 시간 뒤에 오브젝트 재활성화
-    private void OnDisable() => _active.ActiveSelf(_platforms.respawnTime);
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+        CurrentCoroutine = null;
+        _active.ActiveSelf(_platforms.respawnTime);
+    }
 
 }
