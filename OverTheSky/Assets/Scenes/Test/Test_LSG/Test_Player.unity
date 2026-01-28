@@ -4658,6 +4658,8 @@ MonoBehaviour:
     m_Bits: 8
   _groundCheckOffset: 0.15
   _groundCheckRadius: 0.25
+  _ceilingCheckOffset: 0.15
+  _ceilingCheckRadius: 0.25
 --- !u!43 &1523130345
 Mesh:
   m_ObjectHideFlags: 0
@@ -5700,8 +5702,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 50, y: 0, z: 50}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 50, y: 1, z: 50}
+  m_Center: {x: 0, y: -0.5, z: 0}
 --- !u!1 &1984179330
 GameObject:
   m_ObjectHideFlags: 0
@@ -6383,13 +6385,17 @@ PrefabInstance:
       propertyPath: m_TagString
       value: CinemachineTarget
       objectReference: {fileID: 0}
+    - target: {fileID: 2047088260918415127, guid: 783d829aa7c07a24fbdba426b1bc7a7f, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3392624957269113066, guid: 783d829aa7c07a24fbdba426b1bc7a7f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3392624957269113066, guid: 783d829aa7c07a24fbdba426b1bc7a7f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.02
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3392624957269113066, guid: 783d829aa7c07a24fbdba426b1bc7a7f, type: 3}
       propertyPath: m_LocalPosition.z
