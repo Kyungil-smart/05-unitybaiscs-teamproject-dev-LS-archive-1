@@ -253,7 +253,30 @@ https://youtu.be/0USXRC9f4Iw?si=bAmTEeBBeiI8qeQg
 데일리 스크럼, 일정, 회고등의 기능을 활용할 수 있음.
 기존 작성된 마크다운 문서를 노션 페이지에 옮겨 작성
 
+### 2026-01-28
+
+#### 플레이어 제작
+
+**PlayerBase 스크립트 작성**
+`PlayerController`가 상속받을 부모 클래스<br>
+우선 플레이어 관련 스크립트의 기반이자 플레이어가 가져야할 정보를 가진 `PlayerBase` 스크립트를 작성한다.
+
+필요기능
+- 컴포넌트 캐싱 (References)
+  - Rigidbody, Animator, CapsuleCollider 등 필수 컴포넌트를 미리 Awake에서 잡아주고 컨트롤러에서 가져다 쓰기.
+- 땅 체크 로직 (Ground Check)
+- 캐릭터 상태값 (State Properties)
+작업 순서
+- 자식 사용을 위한 컴포넌트
+- 땅 체크용 변수
+- 경사로 체크용 노말 벡터 변수: 기본적으로는 `Vector3.up;`
+- FixedUpdate에서 CheckGround 함수 호출
+- CheckGround 함수
+  - SphereCast로 바닥 감지
+  - 땅에 닿는 순간 / 떨어지는 순간 이벤트 처리용 가상함수 호출
+- 씬뷰 테스트를 위한 기즈모 추가
+
 ---
 
 **작성일**: 2026-01-24  
-**최종 수정**: 2026-01-26
+**최종 수정**: 2026-01-27
