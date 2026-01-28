@@ -9,6 +9,8 @@ namespace OverTheSky.Gimmicks.Obstacles.Object
         [SerializeField] private OverTheSky.Gimmicks.Obstacles.Vehicle_Spawn _vehicleSpawn;
         private Coroutine _vehicleSpawnCoroutine1;
         private Coroutine _vehicleSpawnCoroutine2;
+        
+        // 트리거 진입시 코루틴 시작
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Player"))
@@ -18,6 +20,7 @@ namespace OverTheSky.Gimmicks.Obstacles.Object
             }
         }
 
+        // 트리거 나가면 코루틴 종료
         private void OnTriggerExit(Collider other)
         {
             if (other.CompareTag("Player"))

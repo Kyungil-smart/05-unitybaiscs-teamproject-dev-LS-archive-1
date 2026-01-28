@@ -12,6 +12,7 @@ namespace OverTheSky.Gimmicks.Obstacles
         [SerializeField] private Transform _spawnPoint1;
         [SerializeField] private Transform _spawnPoint2;
 
+        // 차량 오브젝트의 갯수가 적어서 각각을 직접 선언함.
         public IEnumerator _vehicleSpawnCoroutine1()
         {
             while (true)
