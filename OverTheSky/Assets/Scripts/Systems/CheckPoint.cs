@@ -14,7 +14,7 @@ namespace OverTheSky.Systems
         {
             if (other.CompareTag("Player"))
             {
-                CheckpointManager.Instance.RegisterCheckpoint(transform.position, transform.rotation, this);
+                CheckpointManager.Instance.RegisterCheckpoint(transform.position, transform.rotation);
                 ChangeCheckPoint();
             }
         }

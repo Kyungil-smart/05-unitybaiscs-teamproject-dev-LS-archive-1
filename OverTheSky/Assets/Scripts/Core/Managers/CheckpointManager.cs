@@ -22,17 +22,15 @@ namespace OverTheSky.Core
         
         private Vector3 _lastCheckpointPosition;
         private Quaternion _lastCheckpointRotation;
-        private CheckPoint _lastCheckpoint;
 
         // 마지막 체크포인트 위치 등록
-        public void RegisterCheckpoint(Vector3 pos, Quaternion rot, CheckPoint checkpoint)
+        public void RegisterCheckpoint(Vector3 pos, Quaternion rot)
         {
             _lastCheckpointPosition = pos;
             _lastCheckpointRotation = rot;
-            _lastCheckpoint = checkpoint;
-            Debug.Log($"체크 포인트 등록완료");
         }
 
+        // 마지막 체크포인트 위치를 가져옴
         public void GetSpawnPoints(out Vector3 position, out Quaternion rotation)
         {
             position = _lastCheckpointPosition;
