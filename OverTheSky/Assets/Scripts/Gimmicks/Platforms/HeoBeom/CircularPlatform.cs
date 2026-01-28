@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CircularPlatform : MonoBehaviour
 {
-    [SerializeField][Range(0, 100)] private float _rotateSpeed;
+    [SerializeField][Range(0, 200)] private float _rotateSpeed;
     [SerializeField] private GameObject _pivot;
 
     private void FixedUpdate()
