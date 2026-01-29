@@ -10,7 +10,7 @@ namespace OverTheSky.Core
         // 달리기: true/false
         public event Action<bool> OnSprintKeyDown;
         // 점프
-        public event Action OnJump;
+        public event Action<bool> OnJumpKeyDown;
         
         // 프로퍼티 (값이 변할 때만 이벤트 호출)
         private Vector2 _moveInput;
@@ -40,6 +40,20 @@ namespace OverTheSky.Core
             }
         }
         
+        private bool _jumpKeyDown;
+        public bool JumpKeyDown
+        {
+            get => _jumpKeyDown;
+            private set
+            {
+                if (_jumpKeyDown != value)
+                {
+                    _jumpKeyDown = value;
+                    OnJumpKeyDown?.Invoke(value);
+                }
+            }
+        }
+        
         private bool _isInputBlocked = false;
         
         protected override void Awake()
@@ -62,7 +76,7 @@ namespace OverTheSky.Core
             
             SprintKeyDown = Input.GetKey(KeyCode.LeftShift);
             
-            if (Input.GetKeyDown(KeyCode.Space)) OnJump?.Invoke();
+            JumpKeyDown = Input.GetKey(KeyCode.Space);
         }
         
         public void SetInputActive(bool active)
@@ -73,6 +87,7 @@ namespace OverTheSky.Core
                 // 차단될 때 모든 입력 값을 0으로
                 MoveInput = Vector2.zero; 
                 SprintKeyDown = false;
+                JumpKeyDown = false;
             }
         }
     }
