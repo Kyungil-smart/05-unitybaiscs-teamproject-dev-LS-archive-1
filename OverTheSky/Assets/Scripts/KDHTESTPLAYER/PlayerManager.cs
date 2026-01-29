@@ -9,11 +9,14 @@ public class PlayerManager : MonoBehaviour
     IRotate rotate;
 
     float moveValue;
-
+    private bool _isGrounded;
+    private Rigidbody _rb;
+    [SerializeField] private float _jumpForce = 5f;
     void Start()
     {
         move = GetComponent<IMove>();
-        rotate = GetComponent<IRotate>();        
+        rotate = GetComponent<IRotate>();      
+        _rb = GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -24,7 +27,20 @@ public class PlayerManager : MonoBehaviour
         UIManager.Instance.UpdateHeight(transform.position.y);
         moveValue = move?.Invoke(input) ?? 0;
         rotate?.Invoke(h);
+        if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
+        {
+            _rb.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+        }
     }
 
+    private void OnCollisionStay(Collision collision)
+    {
+        _isGrounded = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        _isGrounded = false;
+    }
     public float GetMoveValue() => moveValue;
 }
