@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 7088036073333379011}
   - component: {fileID: 6056653922917705707}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Key
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 8441708468934188606}
   - component: {fileID: 1492160210830637607}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

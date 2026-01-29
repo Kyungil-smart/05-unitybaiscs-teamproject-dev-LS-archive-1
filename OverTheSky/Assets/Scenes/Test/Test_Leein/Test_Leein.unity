@@ -430,7 +430,6 @@ GameObject:
   - component: {fileID: 759653418}
   - component: {fileID: 759653419}
   - component: {fileID: 759653420}
-  - component: {fileID: 759653421}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -563,28 +562,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 759653413}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b87e10b54efe21458093152a59f288f, type: 3}
+  m_Script: {fileID: 11500000, guid: 9aa59cb814da23e4f8bf4da5f70e72f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  _surfaces:
+  - {fileID: 11400000, guid: a191c782254d7ff49a1c0e33ef50fcc2, type: 2}
+  - {fileID: 11400000, guid: b6eae0f2e5c344245b20d6726cf11aaa, type: 2}
+  CurrentSurface: {fileID: 0}
 --- !u!114 &759653420
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 759653413}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83fdedde3f0eb8f4b91a4de18781379c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 6
-  acceleration: 20
-  maxSpeed: 6
-  rb: {fileID: 0}
-  inputDir: {x: 0, y: 0, z: 0}
---- !u!114 &759653421
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -593,12 +578,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 759653413}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 272b8a7f8ee12a24ea27b11f5c68a87e, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b3642904b10b8e418848cc5f19fb902, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 6
-  accel: 46.4
-  decel: 0.734
+  accel: 20
+  decel: 1
+  surface: {fileID: 759653419}
   ds:
     serializedVersion: 2
     m_Bits: 0
@@ -1001,7 +987,9 @@ GameObject:
   - component: {fileID: 1803998401}
   - component: {fileID: 1803998400}
   - component: {fileID: 1803998399}
-  m_Layer: 0
+  - component: {fileID: 1803998403}
+  - component: {fileID: 1803998404}
+  m_Layer: 7
   m_Name: Plane
   m_TagString: Platform
   m_Icon: {fileID: 0}
@@ -1088,13 +1076,50 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1803998398}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.054762557, y: -0, z: -0, w: 0.9984994}
-  m_LocalPosition: {x: -2.24, y: -3.17, z: -5.92}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.24, y: -5.6, z: -5.92}
   m_LocalScale: {x: 1, y: 1, z: 4.39}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 846894361}
-  m_LocalEulerAnglesHint: {x: 6.278, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1803998403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1803998398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 928f138895ef4b64984a9a9ee27fb8ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+--- !u!64 &1803998404
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1803998398}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1894726320
 GameObject:
   m_ObjectHideFlags: 0
