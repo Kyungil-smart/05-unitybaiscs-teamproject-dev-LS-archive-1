@@ -9,3 +9,4 @@ public interface IRotate
 {
     public void Invoke(float horizontal);  // A D 회전
 }
+
