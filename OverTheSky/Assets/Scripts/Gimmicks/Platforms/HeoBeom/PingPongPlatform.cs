@@ -5,16 +5,13 @@ using UnityEngine;
 
 namespace OverTheSky.Gimmicks.Platforms
 {
-    public class PingPongPlatform : MonoBehaviour
+    public class PingPongPlatform : BasePlatform
     {
         [SerializeField][Range(0, 30)] private float _moveSpeed;
         [SerializeField]private Transform _targetPointA;
         [SerializeField]private Transform _targetPointB;
 
         private Transform _currentLocate;
-        private Vector3 _lastPosition;
-        private Rigidbody _playerRigidbody;
-
 
         private void Start()
         {
@@ -50,35 +47,6 @@ namespace OverTheSky.Gimmicks.Platforms
             else if (other.name == "PingPongTargetB")
             {
                 _currentLocate = _targetPointA;
-            }
-        }
-
-        private void MovePassenger()
-        {
-            // 발판의 이동 거리를 계산
-            Vector3 platformMoveDistance = transform.position - _lastPosition;
-
-            // 플레이어가 올라타면 같이 이동
-            if (_playerRigidbody != null)
-            {
-                _playerRigidbody.MovePosition(_playerRigidbody.position + platformMoveDistance);
-            }
-        }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            if (collision.gameObject.CompareTag("Player"))
-            {
-                // 플레이어의 Rigidbody 컴포넌트를 참조
-                _playerRigidbody = collision.gameObject.GetComponent<Rigidbody>();
-            }
-        }
-
-        private void OnCollisionExit(Collision collision)
-        {
-            if (collision.gameObject.CompareTag("Player"))
-            {
-                _playerRigidbody = null;
             }
         }
     }
