@@ -5,53 +5,24 @@ namespace OverTheSky.Core
 {
     public class InputManager : Singleton<InputManager>
     {
-        // 이동: (x, y) 벡터를 매개변수로 넘겨줌
         public event Action<Vector2> OnMove; 
-        // 달리기: true/false
         public event Action<bool> OnSprintKeyDown;
-        // 점프
         public event Action<bool> OnJumpKeyDown;
         
-        // 프로퍼티 (값이 변할 때만 이벤트 호출)
-        private Vector2 _moveInput;
-        public Vector2 MoveInput
-        {
-            get => _moveInput;
-            private set
-            {
-                if (_moveInput != value)
-                {
-                    _moveInput = value;
-                    OnMove?.Invoke(value);
-                }
-            }
-        }
-        private bool _sprintKeyDown;
-        public bool SprintKeyDown
-        {
-            get => _sprintKeyDown;
-            private set
-            {
-                if (_sprintKeyDown != value)
-                {
-                    _sprintKeyDown = value;
-                    OnSprintKeyDown?.Invoke(value);
-                }
-            }
-        }
+        // 현재 입력 상태
+        public Vector2 MoveInput { get; private set; }
+        public bool SprintKeyDown { get; private set; }
         
-        private bool _jumpKeyDown;
-        public bool JumpKeyDown
+        // 점프 입력 버퍼 - FixedUpdate에서 소비할 때까지 유지
+        private bool _jumpBuffered = false;
+        public bool ConsumeJump()
         {
-            get => _jumpKeyDown;
-            private set
+            if (_jumpBuffered)
             {
-                if (_jumpKeyDown != value)
-                {
-                    _jumpKeyDown = value;
-                    OnJumpKeyDown?.Invoke(value);
-                }
+                _jumpBuffered = false;
+                return true;
             }
+            return false;
         }
         
         private bool _isInputBlocked = false;
@@ -69,14 +40,19 @@ namespace OverTheSky.Core
         
         private void ProcessInputs()
         {
+            // 이동 입력
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
-            
             MoveInput = new Vector2(h, v).normalized;
             
+            // 달리기 입력
             SprintKeyDown = Input.GetKey(KeyCode.LeftShift);
             
-            JumpKeyDown = Input.GetKey(KeyCode.Space);
+            // 점프: GetKeyDown이 true면 버퍼에 저장 (소비될 때까지 유지)
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                _jumpBuffered = true;
+            }
         }
         
         public void SetInputActive(bool active)
@@ -84,10 +60,9 @@ namespace OverTheSky.Core
             _isInputBlocked = !active;
             if (_isInputBlocked)
             {
-                // 차단될 때 모든 입력 값을 0으로
                 MoveInput = Vector2.zero; 
                 SprintKeyDown = false;
-                JumpKeyDown = false;
+                _jumpBuffered = false;
             }
         }
     }

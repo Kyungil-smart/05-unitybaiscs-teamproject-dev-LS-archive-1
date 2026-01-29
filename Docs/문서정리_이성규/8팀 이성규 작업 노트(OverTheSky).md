@@ -311,6 +311,8 @@ https://youtu.be/0USXRC9f4Iw?si=bAmTEeBBeiI8qeQg
 
 ### 2026-01-29
 
+플레이어의 조작감 향상을 위한 Input System 재설계, 물리 기반 캐릭터 컨트롤러 구현, 그리고 3인칭 카메라 시스템 구축. Rigidbody의 마찰과 항력(Drag)을 제거하고, 자체적인 속도 계산 로직을 적용함.
+
 #### InputManager 제작
 
 플레이어의 기초 스크립트를 만들었으니 플레이어 컨트롤러를 작성하기 전 입력을 관리할 InputManager를 제작한다.
@@ -333,19 +335,92 @@ OnMove, OnJump, Sprint 이벤트를 통해 외부에서 이벤트 할당하는 �
 
 프로퍼티의 set 접근자 내부에 if (value != _currentValue) 조건을 추가로 이벤트 호출 빈도 최적화
 
+초기에는 Action을 활용한 옵저버 패턴(값이 변할 때만 이벤트 호출)으로 설계했으나, FixedUpdate와의 동기화 및 반응성 문제를 해결하기 위해 Polling(매 프레임 확인) + Buffering 방식으로 변경함.
+- 입력 버퍼(Input Buffer) 도입
+  - 점프 같은 단발성 입력이 물리 연산 프레임(FixedUpdate)과 엇갈려 씹히는 현상을 방지.
+  - Update에서 GetKeyDown을 감지하여 버퍼(_jumpBuffered)를 true로 만들고, FixedUpdate에서 소비(ConsumeJump)하는 방식 적용.
+- 입력 차단(Input Blocking):
+  - SetInputActive(bool) 함수 구현. 컷신이나 UI 팝업 시 입력을 원천 차단하고 이동 벡터를 초기화하여 캐릭터가 계속 미끄러지는 현상 방지.
+
 #### PlayerController 구현
 3인칭 게임이므로 카메라를 기준으로 이동을 구현할 필요가 있다.
 
-- `PlayerBase`를 상속받는다.
-- 이동 속도 변수 설정
-  - 걷는 속도, 달리는 속도, 가속도, 회전 속도
-Move 함수
-- 스프린트 상태인지 체크해서 맞으면 달리는 속도 아니면 걷는 속도로 설정
-- 받은 인풋 값으로 이동 방향 설정
-- 땅에 있을때만 `ProjectOnPlane` 사용으로 경사면 보정으로 이동방향 설정
-- 플레이어 상태에 따라 이동속도 변경
-- 
+Camera.main의 forward/right 벡터를 기준으로 입력값을 변환하여, 카메라가 보는 방향을 기준으로 캐릭터가 이동하도록 구현.
+```cs
+private Vector3 GetCameraRelativeMovement(Vector2 input)
+{
+    Transform cameraTransform = mainCamera.transform;
+    Vector3 forward = cameraTransform.forward;
+    Vector3 right = cameraTransform.right;
+    
+    forward.y = 0f;
+    right.y = 0f;
+    forward.Normalize();
+    right.Normalize();
+    
+    return (forward * input.y + right * input.x).normalized;
+}
+```
 
+Vector3.ProjectOnPlane을 사용하여 경사면에서도 속도 감소 없이 이동 방향을 유지.
+
+문제 해결(트러블 슈팅)
+
+- 물리엔진 고뇌
+  - 땅에서 움직이지 않거나 뻑뻑함 (Friction 문제)
+  - 현상: 이동 입력이 있어도 캐릭터가 제자리에서 꿈쩍하지 않거나, 아주 느리게 이동함.
+  - 원인: CapsuleCollider의 기본 마찰력(Friction)과 Rigidbody의 Drag가 이동 힘을 상쇄시킴.
+  - 해결: 
+    - 동적 물리 재질(PhysicMaterial) 생성: Awake에서 마찰력(Friction)과 탄성(Bounciness)이 0인 재질을 생성하여 콜라이더에 할당.
+    - 수동 속도 제어: 마찰력을 없앤 대신, 입력이 없을 때 코드에서 직접 Velocity를 0으로 감속(Deceleration)하여 미끄러짐 방지.
+- 점프 높이가 너무 낮음 (Drag 문제)
+  - 현상: JumpForce를 줘도 바닥에 붙어있는 듯이 점프가 낮음.
+  - 원인: Rigidbody.drag 값을 높게(15) 설정했더니 공중에서도 저항이 걸려 솟구치는 힘이 즉시 상쇄됨.
+  - 해결:
+    - _rigidbody.drag = 0f로 고정.
+    - 코드 레벨에서 공기 저항을 땅과 다른 값으로 동적으로 제어함
+- 경사면 끼임 및 무한 등반 (Slope & Wall Issue)
+  - 현상: 못 오르는 급경사에 끼어서 캐릭터가 허우적대거나, 점프를 연타하여 벽을 타고 오르는 버그 발생.
+  - 해결:
+    - 탈출 점프 허용: IsGrounded가 false라도 어딘가 밟고 있다면(SlopeAngle > 0) 점프를 허용하여 끼임 현상 탈출 유도.
+    - 벽 반동(Wall Kick): 급경사에서 점프 시, 벽의 법선 벡터(Normal) 방향으로 캐릭터를 밀어내어(PushBack) 무한 등반 꼼수 방지.
+
+**중력 및 접지 안정화**
+- ApplyGravity 로직 개선:
+  - 경사면을 내려갈 때 캐릭터가 붕 뜨는 현상을 막기 위해, 땅에 있을 때는 -2f (경사면에 따라 0f)의 약한 중력을 지속적으로 가해 접지력을 유지.
+  - 실행 순서 확립: ProcessJump() -> ApplyGravity() -> Move() 순으로 처리하여 점프 직후 중력에 의해 속도가 깎이는 문제 방지.
+
+#### CameraController 구현
+기본 기능: 타겟(플레이어) 추적, 마우스 회전, 휠 줌인/아웃.
+충돌 처리: SphereCast를 사용하여 카메라와 플레이어 사이에 벽이 있을 경우, 카메라를 플레이어 쪽으로 당겨 시야가 가려지는 현상 방지.
+
+플레이어를 따라다니는 전형적인 3인칭 숄더뷰/쿼터뷰 카메라를 구현. LateUpdate를 사용하여 플레이어의 이동이 끝난 후 카메라가 따라가도록 하여 떨림 현상을 방지함.
+
+- 타겟 추적 (Target Follow):
+  - 플레이어의 위치(_target)에 높이 오프셋(_height)을 더한 지점을 구심점으로 설정.
+  - Vector3.Lerp를 사용하여 카메라가 타겟을 부드럽게(_smoothSpeed) 따라가도록 구현.
+  - 다행히도 사용한 플레이어 모델링에 카메라 추적을 위한 오브젝트가 있어 편하게 해당 지점을 추적 위치로 설정함.
+  ![alt text](image-13.png)
+- 궤도 회전 (Orbit Rotation):
+  - 마우스 입력을 받아 오일러 각(Euler Angles) 기반으로 회전 (Quaternion.Euler).
+  - Yaw (Y축): 마우스 좌우 입력으로 360도 회전.
+  - Pitch (X축): 마우스 상하 입력으로 회전하되, Mathf.Clamp를 사용하여 상단 70도, 하단 -30도로 각도를 제한(땅을 뚫거나 머리 위로 넘어가는 현상 방지).
+- 줌 인/아웃 (Zoom):
+  - 마우스 스크휠(Mouse ScrollWheel) 입력으로 카메라와 타겟 사이의 거리(_currentDistance)를 조절.
+  - 최소/최대 거리(_minDistance, _maxDistance)를 설정하여 과도한 줌 방지.
+
+**벽 충돌 처리 (Collision Detection)**<br>
+카메라와 플레이어 사이에 벽이나 장애물이 있을 경우, 카메라가 벽을 뚫고 나가는 현상을 방지하고 플레이어 쪽으로 당겨지는 로직 구현.
+- 사용 로직: 역방향 SphereCast
+- 시작점: 플레이어(Target) 위치
+- 방향: 카메라가 있어야 할 위치 방향
+- 방법: Physics.SphereCast를 발사하여 장애물이 감지되면, 충돌 지점(hit.distance)까지만 거리를 유지하고 카메라를 앞으로 당김.
+- SphereCast 사용 이유: 일반 Raycast는 선(Line) 판정이라 얇은 벽이나 모서리에서 카메라가 벽을 파고드는 클리핑(Clipping) 현상이 발생할 수 있음. 반지름(_cameraRadius)을 가진 구체를 쏘아 카메라의 볼륨만큼 공간을 확보함.
+
+**커서 제어** (UX)**
+- 게임 시작 시 Start()에서 Cursor.lockState = CursorLockMode.Locked를 설정하여 마우스 커서를 숨기고 화면 중앙에 고정.
+- ESC 키 입력 시 커서 잠금을 해제(ToggleCursor)하여 UI 조작이 가능하도록 편의성 추가.
+- 추후 게임 매니저로 해당 기능을 이전할 수도 있음
 ---
 
 **작성일**: 2026-01-24  

@@ -178,20 +178,22 @@ namespace OverTheSky.CameraComponents
             // 타겟 위치 (플레이어 위치 + 높이 오프셋)
             Vector3 targetPosition = _target.position + Vector3.up * _height;
             
-            // 회전 쿼터니언 생성
+            // 회전 계산 (마우스 입력이 반영된 Pitch, Yaw 적용)_회전 쿼터니언 생성
             Quaternion rotation = Quaternion.Euler(_pitch, _yaw, 0f);
             
             // 카메라 오프셋 계산 (타겟 뒤쪽)
             Vector3 offset = rotation * new Vector3(0f, 0f, -_currentDistance);
             
-            // 충돌 체크
+            // 충돌 체크 및 거리 보정
             float finalDistance = _currentDistance;
             if (_enableCollision)
             {
+                // 플레이어에서 카메라 방향으로 SphereCast 발사
+                // 장애물 감지 시 finalDistance를 충돌 지점까지로 단축
                 finalDistance = CheckCameraCollision(targetPosition, offset.normalized, _currentDistance);
             }
             
-            // 부드럽게 거리 조정
+            // 부드러운 거리 적용 (갑자기 튀는 현상 방지)
             _collisionDistance = Mathf.Lerp(_collisionDistance, finalDistance, _smoothSpeed * Time.deltaTime);
             
             // 최종 오프셋 (충돌 보정 적용)
@@ -200,7 +202,7 @@ namespace OverTheSky.CameraComponents
             // 최종 카메라 위치
             Vector3 desiredPosition = targetPosition + finalOffset;
             
-            // 부드럽게 이동
+            // 부드럽게 이동 및 LookAt
             transform.position = Vector3.Lerp(
                 transform.position, 
                 desiredPosition, 

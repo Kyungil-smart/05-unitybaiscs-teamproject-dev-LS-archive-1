@@ -51,7 +51,7 @@ namespace OverTheSky.Player
         [SerializeField] private float _ceilingCheckOffset = 0.05f;
         
         // 경사 제한
-        [SerializeField] [Range(0, 70)]private float _maxSlopeAngle = 50f;
+        [Range(0, 70)] public float _maxSlopeAngle = 50f;
         
         // 디바운싱 (코요테 타임)
         private float _lastGroundedTime = 0f;
@@ -83,7 +83,7 @@ namespace OverTheSky.Player
         }
 
 
-        private void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
             CheckGround();
             CheckCeiling();
