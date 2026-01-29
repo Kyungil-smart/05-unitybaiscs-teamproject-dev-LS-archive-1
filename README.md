@@ -9,18 +9,18 @@
 ## 작업노트
 
 이성규<br>
-[![작업노트-이성규](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](https://github.com/Kyungil-smart/05-unitybaiscs-teamproject-dev-LS-archive-1/blob/develop/Docs/%EB%AC%B8%EC%84%9C%EC%A0%95%EB%A6%AC_%EC%9D%B4%EC%84%B1%EA%B7%9C/8%ED%8C%80%20%EC%9D%B4%EC%84%B1%EA%B7%9C%20%EC%9E%91%EC%97%85%20%EB%85%B8%ED%8A%B8(OverTheSky).md)
+[![작업노트-이성규](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs/문서정리_이성규)
 
 김동현<br>
-[![작업노트-김동현](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs)
+[![작업노트-김동현](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs/문서정리_김동현)
 
 이인<br>
-[![작업노트-이인](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs)
+[![작업노트-이인](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs/문서정리_이인)
 
 조규민<br>
-[![작업노트-조규민](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs)
+[![작업노트-조규민](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs/문서정리_조규민)
 
 허범<br>
-[![작업노트-허범](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs)
+[![작업노트-허범](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs/문서정리_허범)
 
 
