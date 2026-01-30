@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Color = UnityEngine.Color;
@@ -24,7 +23,6 @@ public class DestroyPlatforms : MonoBehaviour
     {
         _platforms = Instantiate(_platforms);
         if (Seconds != null ) return;
-         
         targetRenderer = GetComponent<Renderer>();
          Seconds = new(_platforms.Time);
 

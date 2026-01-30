@@ -11,9 +11,9 @@ namespace OverTheSky.UI
         [SerializeField] private TextMeshProUGUI _messageText;
 
         
-        public void ShowMessage()
+        private void Update()
         {
-            _messageText.text = "Respawn : (R)";
+            _messageText.text = "Respawn (R)";
         }
     }
 }

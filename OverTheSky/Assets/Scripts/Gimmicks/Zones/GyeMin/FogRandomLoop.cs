@@ -4,42 +4,40 @@ using UnityEngine;
 
 public class FogRandomLoop : MonoBehaviour
 {
-    [Header("í•„ìˆ˜: ì•ˆê°œ í”„ë¦¬íŒ¹(Foz_Zone) ë„£ê¸°")]
+    [Header("ÇÊ¼ö: ³× ¾È°³ ÇÁ¸®ÆÕ(Foz_Zone) ³Ö±â")]
     [SerializeField] private GameObject fogPrefab;
 
-    [SerializeField] private bool runLoopOnStart = false; // ìë™ ë£¨í”„(ë§¤ë‹ˆì € ì‚¬ìš© ì‹œ false)
-
-    [Header("ì•ˆê°œë¥¼ ë‘˜ ìœ„ì¹˜(ì„ íƒ)")]
-    [Tooltip("ë¹„ì›Œë‘ë©´ ì´ ìŠ¤í¬ë¦½íŠ¸ê°€ ë¶™ì€ ì˜¤ë¸Œì íŠ¸ ìœ„ì¹˜ì— ìƒì„±ë©ë‹ˆë‹¤.")]
+    [Header("¾È°³¸¦ µÑ À§Ä¡(¼±ÅÃ)")]
+    [Tooltip("ºñ¿öµÎ¸é ÀÌ ½ºÅ©¸³Æ®°¡ ºÙÀº ¿ÀºêÁ§Æ® À§Ä¡¿¡ »ı¼ºµË´Ï´Ù.")]
     [SerializeField] private Transform spawnAnchor;
 
-    [Tooltip("Anchor ê¸°ì¤€ ì¶”ê°€ ì˜¤í”„ì…‹(ì˜ˆ: ë°”ë‹¥ì— ì‚´ì§ ë„ìš°ê¸°)")]
+    [Tooltip("Anchor ±âÁØ Ãß°¡ ¿ÀÇÁ¼Â(¿¹: ¹Ù´Ú¿¡ »ìÂ¦ ¶ç¿ì±â)")]
     [SerializeField] private Vector3 offset = new Vector3(0f, 0.05f, 0f);
 
-    [Header("ë”°ë¼ë‹¤ë‹ˆê²Œ í• ì§€(ì„ íƒ)")]
-    [Tooltip("ì¼œë©´ ì•ˆê°œê°€ spawnAnchorë¥¼ ë”°ë¼ë‹¤ë‹™ë‹ˆë‹¤.")]
+    [Header("µû¶ó´Ù´Ï°Ô ÇÒÁö(¼±ÅÃ)")]
+    [Tooltip("ÄÑ¸é ¾È°³°¡ spawnAnchor¸¦ µû¶ó´Ù´Õ´Ï´Ù.")]
     [SerializeField] private bool followAnchorWhileActive = true;
 
-    [Tooltip("ë”°ë¼ë‹¤ë‹ˆëŠ” ê°±ì‹  ì£¼ê¸°(ì´ˆ). 0ì´ë©´ ë§¤ í”„ë ˆì„.")]
+    [Tooltip("µû¶ó´Ù´Ï´Â °»½Å ÁÖ±â(ÃÊ). 0ÀÌ¸é ¸Å ÇÁ·¹ÀÓ.")]
     [SerializeField] private float followUpdateInterval = 0.1f;
 
-    [Header("ê²Œì„ ì‹œì‘ í›„ 'ì²« ì‹¤í–‰' ëŒ€ê¸° ì‹œê°„(ëœë¤)")]
+    [Header("°ÔÀÓ ½ÃÀÛ ÈÄ 'Ã¹ ½ÇÇà' ´ë±â ½Ã°£(·£´ı)")]
     [SerializeField] private Vector2 firstDelayRange = new Vector2(5f, 12f);
 
-    [Header("í•œ ë²ˆ ëë‚œ ë’¤ 'ë‹¤ìŒ ì‹¤í–‰'ê¹Œì§€ ëŒ€ê¸° ì‹œê°„(ëœë¤)")]
+    [Header("ÇÑ ¹ø ³¡³­ µÚ '´ÙÀ½ ½ÇÇà'±îÁö ´ë±â ½Ã°£(·£´ı)")]
     [SerializeField] private Vector2 intervalRange = new Vector2(10f, 25f);
 
-    [Header("ì•ˆê°œ ì—°ì¶œ ì‹œê°„(ëœë¤)")]
+    [Header("¾È°³ ¿¬Ãâ ½Ã°£(·£´ı)")]
     [SerializeField] private Vector2 fadeInRange = new Vector2(2f, 4f);
     [SerializeField] private Vector2 holdRange = new Vector2(3f, 7f);
     [SerializeField] private Vector2 fadeOutRange = new Vector2(2f, 4f);
 
-    [Header("ì•ˆê°œ ìµœëŒ€ ê°•ë„(ì„ íƒ)")]
-    [Tooltip("1ì´ë©´ í”„ë¦¬íŒ¹ì˜ ì›ë˜ ì„¸ê¸°(Emission/ìƒ‰ìƒ) ê·¸ëŒ€ë¡œ. 0.8ì´ë©´ ì¡°ê¸ˆ ì•½í•˜ê²Œ.")]
+    [Header("¾È°³ ÃÖ´ë °­µµ(¼±ÅÃ)")]
+    [Tooltip("1ÀÌ¸é ÇÁ¸®ÆÕÀÇ ¿ø·¡ ¼¼±â(Emission/»ö»ó) ±×´ë·Î. 0.8ÀÌ¸é Á¶±İ ¾àÇÏ°Ô.")]
     [SerializeField] private Vector2 peakIntensityRange = new Vector2(1f, 1f);
 
-    [Header("ì„±ëŠ¥/ì•ˆì • ì˜µì…˜")]
-    [Tooltip("ì¼œë©´ Rate over Distanceë„ ê°™ì´ ìŠ¤ì¼€ì¼í•©ë‹ˆë‹¤. (ì‹œì„ /ìœ„ì¹˜ ì´ë™í•˜ëŠ” ì•ˆê°œë©´ ë³´í†µ OFF ê¶Œì¥)")]
+    [Header("¼º´É/¾ÈÁ¤ ¿É¼Ç")]
+    [Tooltip("ÄÑ¸é Rate over Distanceµµ °°ÀÌ ½ºÄÉÀÏÇÕ´Ï´Ù. (½Ã¼±/À§Ä¡ ÀÌµ¿ÇÏ´Â ¾È°³¸é º¸Åë OFF ±ÇÀå)")]
     [SerializeField] private bool scaleRateOverDistance = false;
 
     private GameObject fogInstance;
@@ -64,14 +62,14 @@ public class FogRandomLoop : MonoBehaviour
     {
         if (fogPrefab == null)
         {
-            Debug.LogError("[FogRandomLoop] fogPrefabì´ ë¹„ì–´ìˆìŠµë‹ˆë‹¤. Inspectorì— Foz_Zone í”„ë¦¬íŒ¹ì„ ë„£ì–´ì£¼ì„¸ìš”.");
+            Debug.LogError("[FogRandomLoop] fogPrefabÀÌ ºñ¾îÀÖ½À´Ï´Ù. Inspector¿¡ Foz_Zone ÇÁ¸®ÆÕÀ» ³Ö¾îÁÖ¼¼¿ä.");
             return;
         }
 
         CreateOrReuseInstance();
         StopAndClear();
 
-        if (runLoopOnStart) loopCo = StartCoroutine(Loop());
+        loopCo = StartCoroutine(Loop());
     }
 
     private void CreateOrReuseInstance()
@@ -81,26 +79,29 @@ public class FogRandomLoop : MonoBehaviour
         fogInstance = Instantiate(fogPrefab);
         fogInstance.name = fogPrefab.name + "_Instance";
 
+        // ÇÁ¸®ÆÕ ·çÆ®/ÀÚ½Ä ¾îµğ¿¡ ÀÖµç Ã¹ ParticleSystemÀ» ÀâÀ½
         ps = fogInstance.GetComponentInChildren<ParticleSystem>(true);
         psRenderer = fogInstance.GetComponentInChildren<ParticleSystemRenderer>(true);
 
         if (ps == null)
         {
-            Debug.LogError("[FogRandomLoop] í”„ë¦¬íŒ¹ ì•ˆì—ì„œ ParticleSystemì„ ì°¾ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.");
+            Debug.LogError("[FogRandomLoop] ÇÁ¸®ÆÕ ¾È¿¡¼­ ParticleSystemÀ» Ã£Áö ¸øÇß½À´Ï´Ù.");
             return;
         }
 
         main = ps.main;
         emission = ps.emission;
 
-        // í˜„ì¬ í”„ë¦¬íŒ¹ ê°’ë“¤ì„ "ê¸°ì¤€"ìœ¼ë¡œ ì €ì¥
+        // ÇöÀç ÇÁ¸®ÆÕ °ªµéÀ» "±âÁØ"À¸·Î ÀúÀå
         baseRateOverTime = emission.rateOverTime;
         baseRateOverDistance = emission.rateOverDistance;
 
+        // StartColor°¡ »ó¼ö(Color)ÀÏ ¶§¸¸ ¾ËÆÄ¸¦ °öÇØ ÄÁÆ®·Ñ
         var sc = main.startColor;
         hasConstantStartColor = sc.mode == ParticleSystemGradientMode.Color;
         baseStartColor = hasConstantStartColor ? sc.color : Color.white;
 
+        // ¸ÓÆ¼¸®¾ó ¾ËÆÄµµ ÄÁÆ®·Ñ(°¡´ÉÇÑ ¼ÎÀÌ´õ¸é)
         mpb = new MaterialPropertyBlock();
         colorId = Shader.PropertyToID("_Color");
         tintColorId = Shader.PropertyToID("_TintColor");
@@ -108,7 +109,7 @@ public class FogRandomLoop : MonoBehaviour
 
     private IEnumerator Loop()
     {
-        // ì²« ì‹¤í–‰ê¹Œì§€ ëœë¤ ëŒ€ê¸°
+        // Ã¹ ½ÇÇà±îÁö ·£´ı ´ë±â
         yield return new WaitForSeconds(RandomRange(firstDelayRange));
 
         while (true)
@@ -129,7 +130,7 @@ public class FogRandomLoop : MonoBehaviour
 
             StopAndClear();
 
-            // ë‹¤ìŒ ì‹¤í–‰ê¹Œì§€ ëœë¤ ëŒ€ê¸°
+            // ´ÙÀ½ ½ÇÇà±îÁö ·£´ı ´ë±â
             yield return new WaitForSeconds(RandomRange(intervalRange));
         }
     }
@@ -177,10 +178,10 @@ public class FogRandomLoop : MonoBehaviour
         float t = 0f;
         float nextFollow = 0f;
 
-        // ì‹œì‘í•  ë•Œ ìœ„ì¹˜ ë§ì¶¤
+        // ½ÃÀÛÇÒ ¶§ À§Ä¡ ¸ÂÃã
         UpdatePosition();
 
-        // ì¼œì•¼ ë³´ì„
+        // ÄÑ¾ß º¸ÀÓ
         if (!ps.isPlaying) ps.Play(true);
 
         while (t < seconds)
@@ -216,23 +217,20 @@ public class FogRandomLoop : MonoBehaviour
 
     private void ApplyIntensity(float intensity)
     {
-        if (ps == null) return; // íŒŒí‹°í´ ì¤€ë¹„ ì „ í˜¸ì¶œ ë°©ì§€
         intensity = Mathf.Clamp01(intensity);
 
-        var emissionModule = ps.emission;
-        var mainModule = ps.main;
-
+        // À§Ä¡ ¾÷µ¥ÀÌÆ®(Anchor ¾øÀ¸¸é ÀÌ ¿ÀºêÁ§Æ® À§Ä¡)
         UpdatePosition();
 
-        // Emission: Rate over Time ìŠ¤ì¼€ì¼
+        // Emission: Rate over Time ½ºÄÉÀÏ
         var rot = baseRateOverTime;
         rot.constant *= intensity;
         rot.constantMin *= intensity;
         rot.constantMax *= intensity;
         rot.curveMultiplier *= intensity;
-        emissionModule.rateOverTime = rot;
+        emission.rateOverTime = rot;
 
-        // Emission: Rate over Distance(ì„ íƒ)
+        // Emission: Rate over Distance(¼±ÅÃ)
         if (scaleRateOverDistance)
         {
             var rod = baseRateOverDistance;
@@ -240,23 +238,22 @@ public class FogRandomLoop : MonoBehaviour
             rod.constantMin *= intensity;
             rod.constantMax *= intensity;
             rod.curveMultiplier *= intensity;
-            emissionModule.rateOverDistance = rod;
+            emission.rateOverDistance = rod;
         }
         else
         {
-            emissionModule.rateOverDistance = 0f;
-
+            emission.rateOverDistance = 0f; // ÀÌµ¿/Àç¹èÄ¡ ½Ã ÆøÁÖ ¹æÁö¿ë
         }
 
-
+        // Start Color ¾ËÆÄ ÄÁÆ®·Ñ(°¡´ÉÇÒ ¶§¸¸)
         if (hasConstantStartColor)
         {
             Color c = baseStartColor;
             c.a = baseStartColor.a * intensity;
-            mainModule.startColor = c;
-
+            main.startColor = c;
         }
 
+        // Material ¾ËÆÄµµ ÄÁÆ®·Ñ(°¡´ÉÇÑ °æ¿ì)
         if (psRenderer != null && psRenderer.sharedMaterial != null)
         {
             psRenderer.GetPropertyBlock(mpb);
@@ -278,7 +275,7 @@ public class FogRandomLoop : MonoBehaviour
             psRenderer.SetPropertyBlock(mpb);
         }
 
-        // ì™„ì „íˆ êº¼ì¡Œìœ¼ë©´ Stop+Clear (ì”ìƒ ì œê±° + ì„±ëŠ¥)
+        // ¿ÏÀüÈ÷ ²¨Á³À¸¸é Stop+Clear (ÀÜ»ó Á¦°Å + ¼º´É)
         if (intensity <= 0.001f)
         {
             StopAndClear();
@@ -293,7 +290,7 @@ public class FogRandomLoop : MonoBehaviour
     {
         if (ps == null) return;
 
-        // ë°©ì¶œ ì¤‘ì§€ + ë‚¨ì€ íŒŒí‹°í´ ì œê±°
+        // ¹æÃâ ÁßÁö + ³²Àº ÆÄÆ¼Å¬ Á¦°Å
         ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
     }
 
@@ -307,42 +304,11 @@ public class FogRandomLoop : MonoBehaviour
 
     private float RandomRange(Vector2 range)
     {
-        // x <= yê°€ ì•„ë‹ ë•Œë¥¼ ë°©ì–´
+        // x <= y°¡ ¾Æ´Ò ¶§¸¦ ¹æ¾î
         float a = Mathf.Min(range.x, range.y);
         float b = Mathf.Max(range.x, range.y);
         return Random.Range(a, b);
     }
-
-    // ë§¤ë‹ˆì €ê°€ í˜¸ì¶œ: ì•ˆê°œ 1íšŒ ì—°ì¶œ
-    public IEnumerator PlayOnce()
-    {
-        if (loopCo != null) { StopCoroutine(loopCo); loopCo = null; } // ê²¹ì¹¨ ë°©ì§€
-        if (fogPrefab == null) yield break;
-
-        CreateOrReuseInstance();
-        StopAndClear(); // ì´ì „ ì”ìƒ ì œê±°
-
-        float fadeIn  = RandomRange(fadeInRange);
-        float hold    = RandomRange(holdRange);
-        float fadeOut = RandomRange(fadeOutRange);
-        float peak    = Mathf.Clamp01(RandomRange(peakIntensityRange));
-
-        yield return Fade(0f, peak, fadeIn);
-        yield return Hold(peak, hold);
-        yield return Fade(peak, 0f, fadeOut);
-
-        ForceStop();
-    }
-
-    // ë§¤ë‹ˆì €ê°€ í˜¸ì¶œ: ì¦‰ì‹œ ì¢…ë£Œ(ê²¹ì¹¨ ë°©ì§€)
-    public void ForceStop()
-    {
-        if (loopCo != null) { StopCoroutine(loopCo); loopCo = null; }
-        if (ps == null) return; // ì•„ì§ íŒŒí‹°í´ì´ ì¤€ë¹„ ì•ˆ ëìœ¼ë©´ ì¢…ë£Œë§Œ
-        ApplyIntensity(0f);
-        StopAndClear();
-    }
-
 }
 
 

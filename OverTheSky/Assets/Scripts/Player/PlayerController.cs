@@ -65,9 +65,6 @@ namespace OverTheSky.Player
             ApplyGravity();
             Move();
             UpdateAnimation();
-            
-            //Debug
-            Debug.Log($"Grounded: {IsGrounded}, Slope: {SlopeAngle}");
         }
         
         private void ReadInput()
@@ -166,8 +163,15 @@ namespace OverTheSky.Player
                 float currentAcceleration = IsGrounded ? _acceleration : _acceleration * _airControlFactor;
                 _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, targetVelocity, currentAcceleration * Time.fixedDeltaTime);
             }
+            // 플레이어의 자체 이동 속도 (입력 + 중력)
+            Vector3 playerVelocity = new Vector3(_horizontalVelocity.x, _verticalVelocity, _horizontalVelocity.z);
+
+            // 발판의 속도 계산
+            Vector3 platformVelocity = Vector3.zero;
             
-            _rigidbody.velocity = new Vector3(_horizontalVelocity.x, _verticalVelocity, _horizontalVelocity.z);
+            //최종 속도 = 내 속도 + 발판 속도
+            _rigidbody.velocity = playerVelocity + platformVelocity;
+            // _rigidbody.velocity = new Vector3(_horizontalVelocity.x, _verticalVelocity, _horizontalVelocity.z);
 #if UNITY_EDITOR
             if (_showDebugLog)
             {

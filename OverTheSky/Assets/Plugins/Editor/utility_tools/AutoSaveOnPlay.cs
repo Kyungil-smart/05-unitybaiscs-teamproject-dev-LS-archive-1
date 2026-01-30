@@ -5,7 +5,7 @@ using UnityEngine;
 [InitializeOnLoad]
 public static class AutoSaveOnPlay
 {
-    static AutoSaveOnPlay()
+    /*static AutoSaveOnPlay()
     {
         EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
     }
@@ -26,5 +26,5 @@ public static class AutoSaveOnPlay
                 Debug.LogWarning("[AutoSave] 저장할 씬이 없거나 저장 실패");
             }
         }
-    }
+    }*/
 }
