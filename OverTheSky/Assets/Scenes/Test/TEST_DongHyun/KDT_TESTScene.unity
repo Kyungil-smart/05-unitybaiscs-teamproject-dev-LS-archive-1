@@ -1146,6 +1146,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _timeText: {fileID: 1300168512}
+--- !u!1 &1314728112
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1314728114}
+  - component: {fileID: 1314728113}
+  m_Layer: 0
+  m_Name: CheckpointManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1314728113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314728112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eeb938b2b627994bb52e603da99401c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1314728114
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314728112}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 631.33136, y: 215.89757, z: 3.417603}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1414084831
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1755,17 +1799,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5152080347065918341, guid: 678e29e2731761540a677c00df7fac3b, type: 3}
-      propertyPath: m_Name
-      value: wind
-      objectReference: {fileID: 0}
     - target: {fileID: 6924799369231918444, guid: 678e29e2731761540a677c00df7fac3b, type: 3}
       propertyPath: m_Name
       value: Map
-      objectReference: {fileID: 0}
-    - target: {fileID: 7094277205511160855, guid: 678e29e2731761540a677c00df7fac3b, type: 3}
-      propertyPath: m_Name
-      value: wind
       objectReference: {fileID: 0}
     - target: {fileID: 7391566253338545793, guid: 678e29e2731761540a677c00df7fac3b, type: 3}
       propertyPath: m_Mesh
@@ -1773,7 +1809,7 @@ PrefabInstance:
       objectReference: {fileID: 1283332138}
     - target: {fileID: 7391566253338545793, guid: 678e29e2731761540a677c00df7fac3b, type: 3}
       propertyPath: m_VersionIndex
-      value: 10864
+      value: 10870
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1797,3 +1833,4 @@ SceneRoots:
   - {fileID: 1063603901}
   - {fileID: 301972148}
   - {fileID: 63443186}
+  - {fileID: 1314728114}
