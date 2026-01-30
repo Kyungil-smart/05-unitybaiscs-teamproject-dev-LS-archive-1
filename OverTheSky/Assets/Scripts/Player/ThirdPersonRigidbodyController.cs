@@ -48,7 +48,6 @@ public class ThirdPersonRigidbodyController : MonoBehaviour
     [Header("Ceiling Check")]
     [SerializeField] private float ceilingCheckDistance = 0.15f;
 
-    // Animator Params (5개)
     private static readonly int AnimSpeed = Animator.StringToHash("Speed");
     private static readonly int AnimJump = Animator.StringToHash("Jump");
     private static readonly int AnimGrounded = Animator.StringToHash("Grounded");
@@ -61,12 +60,9 @@ public class ThirdPersonRigidbodyController : MonoBehaviour
     private Vector2 moveInput;
     private bool runHeld;
 
-    // 점프 입력(버퍼)
     private float jumpBufferCounter;
-    // 코요테 타임(지면 떠난 직후)
     private float coyoteCounter;
-
-    private bool jumpHeld; // 점프를 누르고 있는지(짧게/길게 점프용)
+    private bool jumpHeld;
 
     private bool isGrounded;
     private bool wasGrounded;
@@ -80,7 +76,7 @@ public class ThirdPersonRigidbodyController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         capsule = GetComponent<CapsuleCollider>();
-        rb.useGravity = false; // 코드 중력
+        rb.useGravity = false;
     }
 
     private void Update()
@@ -91,7 +87,6 @@ public class ThirdPersonRigidbodyController : MonoBehaviour
 
         runHeld = Input.GetKey(KeyCode.LeftShift);
 
-        // 점프 버퍼: 누르면 타이머 채우기
         if (Input.GetKeyDown(KeyCode.Space))
             jumpBufferCounter = jumpBufferTime;
 
@@ -106,11 +101,9 @@ public class ThirdPersonRigidbodyController : MonoBehaviour
         ApplyDynamicDrag();
         UpdatePlatformVelocity();
 
-        // 코요테 타임 갱신
         if (isGrounded) coyoteCounter = coyoteTime;
         else coyoteCounter -= Time.fixedDeltaTime;
 
-        // 점프 버퍼 카운트다운
         jumpBufferCounter -= Time.fixedDeltaTime;
 
         HandleMovement();
@@ -125,11 +118,17 @@ public class ThirdPersonRigidbodyController : MonoBehaviour
         groundNormal = Vector3.up;
         currentPlatformRb = null;
 
-        float sphereRadius = capsule.radius * 0.9f;
-        Vector3 origin = rb.position + Vector3.up * sphereRadius;
+        Vector3 lossy = transform.lossyScale;
+        float radiusScale = Mathf.Max(Mathf.Abs(lossy.x), Mathf.Abs(lossy.z));
+        float heightScale = Mathf.Abs(lossy.y);
 
-        if (Physics.SphereCast(origin, sphereRadius, Vector3.down, out RaycastHit hit,
-            groundCheckDistance, groundLayer, QueryTriggerInteraction.Ignore))
+        float sphereRadius = capsule.radius * radiusScale * 0.9f;
+        float halfHeight = capsule.height * 0.5f * heightScale;
+
+        Vector3 center = rb.position + (transform.rotation * Vector3.Scale(capsule.center, lossy));
+        float castDist = Mathf.Max(0f, halfHeight - sphereRadius) + groundCheckDistance;
+
+        if (Physics.SphereCast(center, sphereRadius, Vector3.down, out RaycastHit hit, castDist, groundLayer, QueryTriggerInteraction.Ignore))
         {
             if (hit.normal.y > groundedNormalMinY)
             {
@@ -142,7 +141,6 @@ public class ThirdPersonRigidbodyController : MonoBehaviour
             }
         }
 
-        // 점프 없이 떨어질 때 FreeFall
         if (wasGrounded && !isGrounded && !isJumping)
         {
             if (animator != null)
@@ -160,7 +158,7 @@ public class ThirdPersonRigidbodyController : MonoBehaviour
     {
         platformVelocity = Vector3.zero;
         if (isGrounded && currentPlatformRb != null)
-            platformVelocity = currentPlatformRb.velocity;
+            platformVelocity = currentPlatformRb.GetPointVelocity(rb.position);
     }
 
     private void HandleMovement()
@@ -183,7 +181,7 @@ public class ThirdPersonRigidbodyController : MonoBehaviour
 
         Vector3 moveDir = inputDir;
 
-        if (isGrounded)
+        if (isGrounded && moveDir.sqrMagnitude > 0.0001f)
             moveDir = Vector3.ProjectOnPlane(moveDir, groundNormal).normalized;
 
         if (isGrounded)
@@ -197,7 +195,9 @@ public class ThirdPersonRigidbodyController : MonoBehaviour
         Vector3 targetHorizontalVel = moveDir * targetSpeed;
 
         Vector3 currentVel = rb.velocity;
-        Vector3 currentHorizontal = new Vector3(currentVel.x, 0f, currentVel.z);
+        Vector3 relVel = currentVel - platformVelocity;
+
+        Vector3 currentHorizontal = new Vector3(relVel.x, 0f, relVel.z);
 
         Vector3 newHorizontal = Vector3.MoveTowards(
             currentHorizontal,
@@ -205,7 +205,7 @@ public class ThirdPersonRigidbodyController : MonoBehaviour
             acceleration * Time.fixedDeltaTime
         );
 
-        rb.velocity = new Vector3(newHorizontal.x, currentVel.y, newHorizontal.z) + platformVelocity;
+        rb.velocity = new Vector3(newHorizontal.x, relVel.y, newHorizontal.z) + platformVelocity;
 
         if (visualRoot != null && moveDir.sqrMagnitude > 0.0001f)
         {
@@ -218,14 +218,10 @@ public class ThirdPersonRigidbodyController : MonoBehaviour
     {
         Vector3 v = rb.velocity;
 
-        // 점프 조건:
-        // - 점프 버퍼가 살아있고
-        // - (지면이거나 코요테 타임이 남아있으면) 점프 실행
         bool canJump = (jumpBufferCounter > 0f) && (isGrounded || coyoteCounter > 0f);
 
         if (canJump)
         {
-            // 버퍼 소모
             jumpBufferCounter = 0f;
             coyoteCounter = 0f;
 
@@ -242,24 +238,18 @@ public class ThirdPersonRigidbodyController : MonoBehaviour
             return;
         }
 
-        // 중력 처리
         if (!isGrounded)
         {
             float g = gravity;
 
-            // 낙하 가속
             if (v.y < 0f) g *= fallMultiplier;
-
-            // 짧게 누르면 낮게 점프(상승 중 버튼을 놓으면 더 빨리 떨어지게)
-            if (!jumpHeld && v.y > 0f)
-                g *= jumpCutMultiplier;
+            if (!jumpHeld && v.y > 0f) g *= jumpCutMultiplier;
 
             v.y -= g * Time.fixedDeltaTime;
             rb.velocity = v;
         }
         else
         {
-            // 바닥에 붙는 힘(내리막 공중부양 방지)
             if (!isJumping)
             {
                 v.y -= groundStickForce * Time.fixedDeltaTime;
@@ -272,11 +262,17 @@ public class ThirdPersonRigidbodyController : MonoBehaviour
     {
         if (rb.velocity.y <= 0f) return;
 
-        float sphereRadius = capsule.radius * 0.85f;
-        Vector3 origin = rb.position + Vector3.up * (capsule.height * 0.5f - sphereRadius);
+        Vector3 lossy = transform.lossyScale;
+        float radiusScale = Mathf.Max(Mathf.Abs(lossy.x), Mathf.Abs(lossy.z));
+        float heightScale = Mathf.Abs(lossy.y);
 
-        if (Physics.SphereCast(origin, sphereRadius, Vector3.up, out RaycastHit hit,
-            ceilingCheckDistance, groundLayer, QueryTriggerInteraction.Ignore))
+        float sphereRadius = capsule.radius * radiusScale * 0.85f;
+        float halfHeight = capsule.height * 0.5f * heightScale;
+
+        Vector3 center = rb.position + (transform.rotation * Vector3.Scale(capsule.center, lossy));
+        Vector3 origin = center + Vector3.up * Mathf.Max(0f, halfHeight - sphereRadius);
+
+        if (Physics.SphereCast(origin, sphereRadius, Vector3.up, out RaycastHit hit, ceilingCheckDistance, groundLayer, QueryTriggerInteraction.Ignore))
         {
             if (hit.normal.y < 0f)
             {
@@ -303,5 +299,6 @@ public class ThirdPersonRigidbodyController : MonoBehaviour
         animator.SetFloat(AnimMotionSpeed, 1f);
     }
 }
+
 
 
