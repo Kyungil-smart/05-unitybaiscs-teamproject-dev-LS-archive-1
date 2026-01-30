@@ -11,13 +11,13 @@ namespace OverTheSky.UI
         [SerializeField] private TextMeshProUGUI _timeText;
         private float _time = 0f;
         
-        private void Update()
+        public void UpdateTime()
         {
             _time += Time.deltaTime;
             TimeCal();
         }
         
-        private void TimeCal()
+        public void TimeCal()
         {
             if (_timeText != null)
             {

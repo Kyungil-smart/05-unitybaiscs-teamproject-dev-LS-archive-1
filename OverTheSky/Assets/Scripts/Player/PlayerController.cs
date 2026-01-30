@@ -65,6 +65,9 @@ namespace OverTheSky.Player
             ApplyGravity();
             Move();
             UpdateAnimation();
+            
+            //Debug
+            Debug.Log($"Grounded: {IsGrounded}, Slope: {SlopeAngle}");
         }
         
         private void ReadInput()
