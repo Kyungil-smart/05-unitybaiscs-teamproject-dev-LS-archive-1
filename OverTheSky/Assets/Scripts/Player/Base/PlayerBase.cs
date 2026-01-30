@@ -38,9 +38,6 @@ namespace OverTheSky.Player
         public Vector3 GroundNormal { get; private set; } = Vector3.up;
         public float SlopeAngle { get; private set; }
         
-        // 현재 밟고 있는 바닥의 리지드바디
-        public Rigidbody ConnectedBody { get; private set; }
-        
         // 땅 체크용 변수(인스펙터)
         [Header("Ground Check Settings")]
         [SerializeField] private LayerMask _groundLayer;
@@ -115,8 +112,6 @@ namespace OverTheSky.Player
                 // Normal.y 값으로 표면 종류 판정
                 if (hit.normal.y > GROUND_NORMAL_THRESHOLD)
                 {
-                    // 바닥으로 판정됐을 때, 그 물체의 Rigidbody 가져오기
-                    ConnectedBody = hit.collider.attachedRigidbody;
                     // 바닥
                     if (SlopeAngle > _maxSlopeAngle)
                     {
@@ -156,8 +151,6 @@ namespace OverTheSky.Player
                 GroundNormal = Vector3.up;
                 SlopeAngle = 0f;
                 IsWall = false;
-                // 공중이면 연결된 바닥 없음
-                ConnectedBody = null;
                 
                 // 코요테 타임 적용
                 if (Time.time - _lastGroundedTime <= COYOTE_TIME)
