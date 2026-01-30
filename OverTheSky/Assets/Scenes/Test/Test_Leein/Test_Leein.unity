@@ -1424,9 +1424,5 @@ SceneRoots:
   - {fileID: 530633106}
   - {fileID: 1223169281}
   - {fileID: 759653417}
-<<<<<<< Feat/SkyBoxChange
   - {fileID: 846894361}
   - {fileID: 609959252}
-=======
-  - {fileID: 846894361}
->>>>>>> develop
