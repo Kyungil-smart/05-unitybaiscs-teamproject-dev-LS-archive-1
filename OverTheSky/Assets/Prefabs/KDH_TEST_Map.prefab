@@ -2763,7 +2763,7 @@ GameObject:
   - component: {fileID: 7551552661305032696}
   - component: {fileID: 5131442549901461557}
   m_Layer: 3
-  m_Name: Ice
+  m_Name: destroy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8106,7 +8106,7 @@ GameObject:
   - component: {fileID: 786061939078183955}
   - component: {fileID: 3773965322661338246}
   m_Layer: 3
-  m_Name: Ice
+  m_Name: destroy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8632,7 +8632,7 @@ GameObject:
   - component: {fileID: 995838113309852107}
   - component: {fileID: 5872258069214221372}
   m_Layer: 3
-  m_Name: Cube (46)
+  m_Name: destroy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12545,7 +12545,7 @@ GameObject:
   - component: {fileID: 4415893780277898553}
   - component: {fileID: 3070226440033720010}
   m_Layer: 3
-  m_Name: Cube (45)
+  m_Name: destroy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14232,7 +14232,7 @@ GameObject:
   - component: {fileID: 2331364817853343976}
   - component: {fileID: 8727667178516223953}
   m_Layer: 3
-  m_Name: Ice
+  m_Name: destroy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

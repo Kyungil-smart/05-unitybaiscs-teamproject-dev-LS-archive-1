@@ -1755,9 +1755,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5152080347065918341, guid: 678e29e2731761540a677c00df7fac3b, type: 3}
+      propertyPath: m_Name
+      value: wind
+      objectReference: {fileID: 0}
     - target: {fileID: 6924799369231918444, guid: 678e29e2731761540a677c00df7fac3b, type: 3}
       propertyPath: m_Name
       value: Map
+      objectReference: {fileID: 0}
+    - target: {fileID: 7094277205511160855, guid: 678e29e2731761540a677c00df7fac3b, type: 3}
+      propertyPath: m_Name
+      value: wind
       objectReference: {fileID: 0}
     - target: {fileID: 7391566253338545793, guid: 678e29e2731761540a677c00df7fac3b, type: 3}
       propertyPath: m_Mesh
@@ -1765,7 +1773,7 @@ PrefabInstance:
       objectReference: {fileID: 1283332138}
     - target: {fileID: 7391566253338545793, guid: 678e29e2731761540a677c00df7fac3b, type: 3}
       propertyPath: m_VersionIndex
-      value: 10849
+      value: 10864
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
