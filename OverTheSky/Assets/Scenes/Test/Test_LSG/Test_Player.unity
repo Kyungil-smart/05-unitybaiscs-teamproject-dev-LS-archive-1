@@ -4656,10 +4656,11 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  _groundCheckOffset: 0.15
   _groundCheckRadius: 0.25
-  _ceilingCheckOffset: 0.15
+  _groundCheckOffset: 0.15
   _ceilingCheckRadius: 0.25
+  _ceilingCheckOffset: 0.15
+  _maxSlopeAngle: 50
 --- !u!43 &1523130345
 Mesh:
   m_ObjectHideFlags: 0
