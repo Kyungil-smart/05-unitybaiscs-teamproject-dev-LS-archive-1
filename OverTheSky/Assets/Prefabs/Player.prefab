@@ -427,7 +427,7 @@ GameObject:
   - component: {fileID: 3546179558104607747}
   m_Layer: 6
   m_Name: PlayerCameraRoot
-  m_TagString: Untagged
+  m_TagString: CinemachineTarget
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1096,6 +1096,7 @@ GameObject:
   - component: {fileID: 183967318754781749}
   - component: {fileID: 4254122272754856713}
   - component: {fileID: 2047088260918415127}
+  - component: {fileID: 8525067684814948335}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -1162,7 +1163,7 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.28
-  m_Height: 1.8
+  m_Height: 1.85
   m_Direction: 1
   m_Center: {x: 0, y: 0.93, z: 0}
 --- !u!54 &2047088260918415127
@@ -1192,6 +1193,34 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &8525067684814948335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3555910018307792093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71302c1587d641e428073f894f49b01c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  _groundCheckRadius: 0.25
+  _groundCheckOffset: 0.05
+  _ceilingCheckRadius: 0.25
+  _ceilingCheckOffset: 0.05
+  _maxSlopeAngle: 50
+  _moveSpeed: 2
+  _sprintSpeed: 6
+  _acceleration: 15
+  _rotationSpeed: 10
+  _jumpHeight: 1.2
+  _gravity: -15
+  _airControlFactor: 0.3
+  _showDebugLog: 0
 --- !u!1 &3625760756969748032
 GameObject:
   m_ObjectHideFlags: 0

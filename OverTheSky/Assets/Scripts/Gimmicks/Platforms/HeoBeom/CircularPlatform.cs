@@ -4,14 +4,17 @@ using UnityEngine;
 
 namespace OverTheSky.Gimmicks.Platforms
 {
-    public class CircularPlatform : MonoBehaviour
+    public class CircularPlatform : BasePlatform
     {
         [SerializeField][Range(0, 200)] private float _rotateSpeed;
         [SerializeField] private GameObject _pivot;
 
         private void FixedUpdate()
         {
+            _lastPosition = transform.position;
+
             Rotate();
+            MovePassenger();
         }
 
         private void Rotate()

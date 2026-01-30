@@ -1,0 +1,219 @@
+using OverTheSky.Core;
+using UnityEngine;
+
+namespace OverTheSky.Player
+{
+    public class PlayerController : PlayerBase
+    {
+        [Header("Movement Settings")] 
+        [SerializeField] private float _moveSpeed = 2f;
+        [SerializeField] [Range(0, 20)] private float _sprintSpeed = 6f;
+        [SerializeField] private float _acceleration = 15f;
+        [SerializeField] private float _rotationSpeed = 10f;
+
+        [Header("Jump Settings")]
+        [SerializeField] private float _jumpHeight = 1.2f;
+        [SerializeField] private float _gravity = -15f;
+        
+        [Header("Air Control Settings")]
+        [SerializeField] [Range(0f, 1f)] private float _airControlFactor = 0.3f;
+        
+        [Header("Debug")]
+        [SerializeField] private bool _showDebugLog = false;
+        
+        // 물리 상태
+        private float _verticalVelocity;
+        private Vector3 _horizontalVelocity;
+        private float _terminalVelocity = 53f;
+        
+        // 입력 상태
+        private Vector2 _currentMoveInput;
+        private bool _isSprinting;
+        private Camera mainCamera;
+
+        protected override void Awake()
+        {
+            mainCamera = Camera.main;
+            base.Awake();
+            SetupFrictionlessMaterial();
+        }
+        
+        private void SetupFrictionlessMaterial()
+        {
+            PhysicMaterial frictionless = new PhysicMaterial("PlayerFrictionless");
+            frictionless.dynamicFriction = 0f;
+            frictionless.staticFriction = 0f;
+            frictionless.frictionCombine = PhysicMaterialCombine.Minimum;
+            frictionless.bounceCombine = PhysicMaterialCombine.Minimum;
+            frictionless.bounciness = 0f;
+            
+            if (_col != null)
+            {
+                _col.material = frictionless;
+            }
+        }
+        
+        protected override void FixedUpdate()
+        {
+            base.FixedUpdate();
+            
+            ReadInput();
+            
+            //_rigidbody.drag = 0f;
+            
+            ProcessJump();
+            ApplyGravity();
+            Move();
+            UpdateAnimation();
+            
+            //Debug
+            Debug.Log($"Grounded: {IsGrounded}, Slope: {SlopeAngle}");
+        }
+        
+        private void ReadInput()
+        {
+            if (InputManager.Instance == null) return;
+            
+            _currentMoveInput = InputManager.Instance.MoveInput;
+            _isSprinting = InputManager.Instance.SprintKeyDown;
+        }
+        
+        private void ApplyGravity()
+        {
+            if (IsGrounded && _verticalVelocity < 0f)
+            {
+                // 오를 수 있는 경사면 바닥이면 누르는 힘 0으로 미끄럼 방지
+                // 평지면 -2f로 힘으로 눌러 판정성 안정화 
+                _verticalVelocity = (SlopeAngle > 0f) ? 0f : -2f;
+                return;
+            }
+            // 공중일 때 중력 누적
+            if (_verticalVelocity > -_terminalVelocity)
+            {
+                _verticalVelocity += _gravity * Time.fixedDeltaTime;
+            }
+        }
+        
+        private void ProcessJump()
+        {
+            // 버퍼에서 점프 입력 소비
+            bool jumpPressed = InputManager.Instance != null && InputManager.Instance.ConsumeJump();
+            
+            // 땅 or 가파른 경사
+            bool canJump = IsGrounded || (SlopeAngle > 0f && SlopeAngle < 85f);
+            
+            if (canJump && jumpPressed && !IsCeiling)
+            {
+                // 수직 점프 (기본)
+                _verticalVelocity = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
+                
+                // 가파른 경사면(= !IsGrounded)에서 점프했다면? 
+                // -> 벽 반대 방향으로 밀쳐낸다! (등반 방지)
+                if (!IsGrounded)
+                {
+                    // GroundNormal은 PlayerBase에서 계산해둔 벽의 방향
+                    Vector3 pushDir = new Vector3(GroundNormal.x, 0f, GroundNormal.z).normalized;
+            
+                    // 이동 속도만큼 벽 반대로 튕겨냄 (Horizontal Velocity 덮어쓰기)
+                    _horizontalVelocity = pushDir * _moveSpeed;
+                }
+                
+                _anim.SetTrigger(Define.Anim.IsJump);
+                
+                if (_showDebugLog) Debug.Log($"[Jump] Velocity: {_verticalVelocity}");
+            }
+        }
+        
+        private void Move()
+        {
+            float targetSpeed = _isSprinting ? _sprintSpeed : _moveSpeed;
+            
+            // 입력이 없을 때 처리 (안미끄러지게)
+            if (_currentMoveInput.magnitude < 0.01f)
+            {
+                if (IsGrounded)
+                {
+                    // 경사면에서도 미끄러지지 않게 X, Z를 아예 0으로 고정
+                    // Y는 -2f (ApplyGravity에서 설정한 바닥 부착용 값) 유지
+                    _rigidbody.velocity = new Vector3(0f, _verticalVelocity, 0f); 
+                    _horizontalVelocity = Vector3.zero; // 내부 변수도 초기화
+                }
+                else
+                {
+                    // 공중에서는 기존대로 감속 (관성 유지)
+                    float deceleration = _acceleration * _airControlFactor;
+                    _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, Vector3.zero, deceleration * Time.fixedDeltaTime);
+                    _rigidbody.velocity = new Vector3(_horizontalVelocity.x, _verticalVelocity, _horizontalVelocity.z);
+                }
+                return;
+            }
+            else
+            {
+                Vector3 moveDirection = GetCameraRelativeMovement(_currentMoveInput);
+                
+                if (moveDirection.magnitude > 0.01f)
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _rotationSpeed * Time.fixedDeltaTime);
+                }
+                
+                if (IsGrounded)
+                {
+                    moveDirection = Vector3.ProjectOnPlane(moveDirection, GroundNormal).normalized;
+                }
+                
+                Vector3 targetVelocity = moveDirection * targetSpeed;
+                float currentAcceleration = IsGrounded ? _acceleration : _acceleration * _airControlFactor;
+                _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, targetVelocity, currentAcceleration * Time.fixedDeltaTime);
+            }
+            
+            _rigidbody.velocity = new Vector3(_horizontalVelocity.x, _verticalVelocity, _horizontalVelocity.z);
+#if UNITY_EDITOR
+            if (_showDebugLog)
+            {
+                Debug.Log($"[Move] HVel: {_horizontalVelocity.magnitude:F2}, VVel: {_verticalVelocity:F2}, Grounded: {IsGrounded}");
+            }
+#endif
+        }
+        
+        private Vector3 GetCameraRelativeMovement(Vector2 input)
+        {
+            Transform cameraTransform = mainCamera.transform;
+            Vector3 forward = cameraTransform.forward;
+            Vector3 right = cameraTransform.right;
+            
+            forward.y = 0f;
+            right.y = 0f;
+            forward.Normalize();
+            right.Normalize();
+            
+            return (forward * input.y + right * input.x).normalized;
+        }
+        
+        private void UpdateAnimation()
+        {
+            float currentSpeed = _horizontalVelocity.magnitude;
+            _anim.SetFloat(Define.Anim.Speed, currentSpeed, 0.1f, Time.fixedDeltaTime);
+            
+            float targetSpeed = _isSprinting ? _sprintSpeed : _moveSpeed;
+            float motionSpeed = targetSpeed > 0 ? Mathf.Clamp(currentSpeed / targetSpeed, 0.5f, 1.5f) : 1f;
+            _anim.SetFloat(Define.Anim.MotionSpeed, motionSpeed);
+            
+            _anim.SetBool(Define.Anim.IsGrounded, IsGrounded);
+            
+            bool isFalling = !IsGrounded && _verticalVelocity < -5.0f; 
+    
+            _anim.SetBool(Define.Anim.IsFalling, isFalling);
+        }
+        
+        protected override void OnLand()
+        {
+            base.OnLand();
+        }
+
+        protected override void OnFall()
+        {
+            base.OnFall();
+        }
+    }
+}

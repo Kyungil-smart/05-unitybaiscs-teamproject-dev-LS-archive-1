@@ -51,15 +51,17 @@ namespace OverTheSky.Player
         [SerializeField] private float _ceilingCheckOffset = 0.05f;
         
         // 경사 제한
-        [SerializeField] [Range(0, 70)]private float _maxSlopeAngle = 50f;
+        [Range(0, 70)] public float _maxSlopeAngle = 50f;
         
         // 디바운싱 (코요테 타임)
         private float _lastGroundedTime = 0f;
         private const float COYOTE_TIME = 0.1f;  // 0.1초 여유
         
         // Normal 판정 임계값
-        private const float GROUND_NORMAL_THRESHOLD = 0.7f;
-        private const float CEILING_NORMAL_THRESHOLD = -0.1f;
+        // 거의 수직인 벽이 아니라면 일단 바닥(Ground)으로 간주
+        private const float GROUND_NORMAL_THRESHOLD = 0.1f;     // 0.1f(약 84도)
+        // 약간이라도 아래를 보고 있으면 천장으로 간주
+        private const float CEILING_NORMAL_THRESHOLD = -0.1f;   // -0.1f (약 95도)
         
         
         protected virtual void Awake()
@@ -81,7 +83,7 @@ namespace OverTheSky.Player
         }
 
 
-        private void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
             CheckGround();
             CheckCeiling();
@@ -99,7 +101,10 @@ namespace OverTheSky.Player
             float castDistance = (_col.height * 0.5f) - _groundCheckRadius + _groundCheckOffset;
             
             // SphereCast로 바닥 감지
-            if (Physics.SphereCast(startPos, _groundCheckRadius, Vector3.down, out RaycastHit hit, castDistance, _groundLayer))
+            if (Physics.SphereCast(
+                    startPos, _groundCheckRadius, 
+                    Vector3.down, out RaycastHit hit, 
+                    castDistance, _groundLayer))
             {
                 // 경사각 계산
                 SlopeAngle = Vector3.Angle(Vector3.up, hit.normal);
@@ -113,7 +118,7 @@ namespace OverTheSky.Player
                         // 너무 가파른 경사 - 올라갈 수 없음
                         IsGrounded = false;
                         IsWall = false;
-                        GroundNormal = Vector3.up;
+                        GroundNormal = hit.normal;
                     }
                     else
                     {
