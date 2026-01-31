@@ -40,12 +40,22 @@ namespace OverTheSky.Core
         private void InitializeManagers()
         {
             // 매니저를 생성하고 transform을 GameManager 밑으로 옮겨서 정리
-            if (InputManager.Instance != null) 
-            {
-                InputManager.Instance.transform.SetParent(this.transform);
-            }
+            RegisterManager<InputManager>();
+            RegisterManager<SceneController>();
             
             Logger.Instance.LogInfo("All System Managers Initialized.");
+        }
+        
+        // 싱글톤 매니저를 생성(호출)하고 GameManager의 자식으로 넣는 제네릭 함수
+        private void RegisterManager<T>() where T : Singleton<T>
+        {
+            // Instance를 호출하는 순간 없으면 자동 생성되고, 있으면 가져옵니다.
+            var instance = Singleton<T>.Instance;
+    
+            if (instance != null)
+            {
+                instance.transform.SetParent(this.transform);
+            }
         }
         
         private void ToggleCursorState()

@@ -446,6 +446,34 @@ CancelInput = Input.GetKeyDown(KeyCode.Escape);
 #### PlayerController 버그 수정
 못오르는 경사각 사이에 껴서 점프로 탈출 후, 혹은 급경사에서 점프 후 점프 애니메이션이 척지 후 한 번 더 재생되는 버그 수정
 - `OnLand()` 시에 `_anim.ResetTrigger(Define.Anim.IsJump)`를 실행하여 점프 트리거 초기화.
+
+#### 병합 작업 진행 전 사소한 수정
+오류를 발생 시키는 충돌 코드 수정<br>
+GameManeger에서 싱글톤 매니저를 생성(호출)하고 GameManager의 자식으로 넣는 제네릭 함수를 만들어 InitializeManagers 함수 가독성 및 유지 보수 편의성 향상
+
+불필요한 동작과 기술부채의 가능성이 높은 팀원의 코드를 더이상 안쓰는 코드로 설정
+![alt text](image-14.png)
+```cs
+// [AddComponentMenu("")] : 유니티 에디터 'Add Component' 메뉴에서 검색 안 되게 숨김
+[System.Obsolete("이 클래스는 더 이상 사용되지 않습니다. OverTheSky.Core.SceneController를 대신 사용하세요.")]
+[AddComponentMenu("")]
+```
+해당 기능을 통해 인스펙터에서 경고창으로 사용되지 않는 코드임을 알리고 에디터상에서 해당 코드 추가를 방지함.
+
+#### TitleUIManager 제작
+불필요한 SceneLoader 발견 후 일정 기능 SceneManager로 이동 및 해당 코드 레거시화
+```cs
+// [AddComponentMenu("")] : 유니티 에디터 'Add Component' 메뉴에서 검색 안 되게 숨김
+[System.Obsolete("이 클래스는 더 이상 사용되지 않습니다. OverTheSky.Core.SceneController를 대신 사용하세요.")]
+[AddComponentMenu("")]
+```
+TitleUIManager를 통해 타이틀 씬의 버튼에 AddListener로 필요 동작 추가<br>
+인스펙터 연결 방식 대신 AddListener를 사용하여 SceneController와 안전하게 연동
+
+#### 테스트 동작을 위한 작업
+Define에 정의된 씬 이름(상수)을 기반으로 실제 빌드에 사용할 씬 흐름(Title → Game) 구성
+싱글톤 매니저들의 씬 전환시 정상 작동 확인.
+
 ---
 
 **작성일**: 2026-01-24  

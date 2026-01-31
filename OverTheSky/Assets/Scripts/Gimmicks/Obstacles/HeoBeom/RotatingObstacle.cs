@@ -24,14 +24,14 @@ namespace OverTheSky.Gimmicks.Obstacles
 
         private void OnCollisionEnter(Collision other)
         {
-            // ¿©±â¼­´Â °øºÎÇÒ °â ·¹ÀÌ¾î·Î Á¢±ÙÇØºÃ½À´Ï´Ù.
+            // ì—¬ê¸°ì„œëŠ” ê³µë¶€í•  ê²¸ ë ˆì´ì–´ë¡œ ì ‘ê·¼í•´ë´¤ìŠµë‹ˆë‹¤.
             if (((1 << other.gameObject.layer) & _layerMask.value)!= 0)
             {
                 Rigidbody playerRigidbody = other.gameObject.GetComponent<Rigidbody>();
 
                 if (playerRigidbody != null)
                 {   
-                    // ÄÚ·çÆ¾À» »ç¿ëÇØ ³¯¾Æ°¡´Â ¸ğ¼ÇÀ» Á¶±İ ´õ ºÎµå·´°Ô ¿¬Ãâ
+                    // ì½”ë£¨í‹´ì„ ì‚¬ìš©í•´ ë‚ ì•„ê°€ëŠ” ëª¨ì…˜ì„ ì¡°ê¸ˆ ë” ë¶€ë“œëŸ½ê²Œ ì—°ì¶œ
                     StartCoroutine(SmoothMotion(playerRigidbody));
                 }
             }
@@ -46,8 +46,8 @@ namespace OverTheSky.Gimmicks.Obstacles
             {
                 Vector3 hitDirection = (-transform.forward + transform.up * 0.3f).normalized;
 
-                // AddForce·Î Player¿¡°Ô ÈûÀ» Àü´Ş
-                // _hitForce ¼öÄ¡¸¦ ³·Ãß°í ForceMode¸¦ º¯°æ °¡´É(¿¬ÃâÀûÀ¸·Î ´õ ¸¾¿¡ µå´Â °É·Î)
+                // AddForceë¡œ Playerì—ê²Œ í˜ì„ ì „ë‹¬
+                // _hitForce ìˆ˜ì¹˜ë¥¼ ë‚®ì¶”ê³  ForceModeë¥¼ ë³€ê²½ ê°€ëŠ¥(ì—°ì¶œì ìœ¼ë¡œ ë” ë§˜ì— ë“œëŠ” ê±¸ë¡œ)
                 playerRigidbody.AddForce(hitDirection * _rotateSpeed * _hitForce, ForceMode.Force);
 
                 _elapsed += Time.deltaTime;

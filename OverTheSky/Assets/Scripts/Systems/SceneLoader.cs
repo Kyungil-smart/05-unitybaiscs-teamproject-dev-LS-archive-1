@@ -6,6 +6,9 @@ using OverTheSky.Core;
 
 namespace OverTheSky.Systems
 {
+    // [AddComponentMenu("")] : 유니티 에디터 'Add Component' 메뉴에서 검색 안 되게 숨김
+    [System.Obsolete("이 클래스는 더 이상 사용되지 않습니다. OverTheSky.Core.SceneController를 대신 사용하세요.")]
+    [AddComponentMenu("")]
     public class SceneLoader : MonoBehaviour
     {
         public static SceneLoader Instance { get; private set; }
@@ -26,7 +29,7 @@ namespace OverTheSky.Systems
             switch (sceneName)
             {
                 case "GameStart":
-                    SceneManager.Instance.LoadScene(SceneManager.GAME_SCENE);
+                    SceneController.Instance.LoadScene(Define.Scene.Game);
                     break;
             }
         }

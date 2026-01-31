@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Test/Test_LSG/Test_Title_LS.unity
-    guid: b1253d2d61cd96e4b9539f777bad0a82
+    path: Assets/Scenes/TitleScene.unity
+    guid: 73f53c32bdac52540bb24bf90cc65a27
   - enabled: 1
-    path: Assets/Scenes/Test/Test_LSG/Test_Player.unity
-    guid: 7f00c1c95c2d6c44b81b6e61580ddb44
+    path: Assets/Scenes/GameScene.unity
+    guid: 74ac1d032b307fc4cb8e7558220a1841
   m_configObjects: {}

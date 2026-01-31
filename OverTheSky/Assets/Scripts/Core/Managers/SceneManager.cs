@@ -1,16 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using OverTheSky.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace OverTheSky.Core
 {
-    public class SceneManager : Singleton<SceneManager>
+    public class SceneController : Singleton<SceneController>
     {
-        public const string TITLE_SCENE = "TitleScene";
-        public const string GAME_SCENE = "KDT_TESTScene";
-
         protected override void Awake()
         {
             base.Awake();
@@ -18,13 +12,21 @@ namespace OverTheSky.Core
         
         public void LoadScene(string sceneName)
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+            SceneManager.LoadScene(sceneName);
         }
 
 
         public string GetCurrentSceneName()
         {
-            return UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            return SceneManager.GetActiveScene().name;
+        }
+        
+        public void QuitGame()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            Application.Quit();
         }
     }
 }
