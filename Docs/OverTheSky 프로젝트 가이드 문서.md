@@ -353,7 +353,7 @@ Center: 콜라이더 중심이 캐릭터 중심과 일치하도록
 | `Speed` | Float | 이동 속도 (2~6) | 0: Idle, 2: Walk, 6 Run |
 | `Jump` | Trigger | 점프 시작 | 점프 키 입력 시 Set |
 | `Grounded` | Bool | 바닥 접촉 여부 | 땅 닿으면 true |
-| `FreeFall` | Trigger | 자유낙하 | 점프 없이 떨어질 때 Set |
+| `FreeFall` | Bool | 자유낙하 | 점프 없이 떨어질 때 Set |
 | `MotionSpeed` | Float | 애니메이션 재생 속도 | 1.0 = 기본 속도 |
 
 #### 상태 전환 흐름

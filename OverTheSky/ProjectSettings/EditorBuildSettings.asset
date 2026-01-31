@@ -6,15 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Test/Test.unity
-    guid: de5f724342b662a408bbac79213b2aab
+    path: Assets/Scenes/Test/Test_LSG/Test_Title_LS.unity
+    guid: b1253d2d61cd96e4b9539f777bad0a82
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
-    path: Assets/Scenes/Test/TEST_DongHyun/TitleScene.unity
-    guid: 8713abe2bd28b0f4b949c52c263058c2
-  - enabled: 1
-    path: Assets/Scenes/Test/TEST_DongHyun/KDT_TESTScene.unity
-    guid: cfa35e15bd1cb2d4dbd98713a66dfcf9
+    path: Assets/Scenes/Test/Test_LSG/Test_Player.unity
+    guid: 7f00c1c95c2d6c44b81b6e61580ddb44
   m_configObjects: {}

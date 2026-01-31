@@ -8,7 +8,7 @@ public static class AutoSaveOnPlay
     /*static AutoSaveOnPlay()
     {
         EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-    }
+    }*/
 
     private static void OnPlayModeStateChanged(PlayModeStateChange state)
     {
