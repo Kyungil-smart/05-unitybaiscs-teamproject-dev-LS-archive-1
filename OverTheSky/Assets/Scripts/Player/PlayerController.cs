@@ -33,8 +33,8 @@ namespace OverTheSky.Player
 
         protected override void Awake()
         {
-            mainCamera = Camera.main;
             base.Awake();
+            mainCamera = Camera.main;
             SetupFrictionlessMaterial();
         }
         
@@ -213,6 +213,7 @@ namespace OverTheSky.Player
         protected override void OnLand()
         {
             base.OnLand();
+            _anim.ResetTrigger(Define.Anim.IsJump);
         }
 
         protected override void OnFall()

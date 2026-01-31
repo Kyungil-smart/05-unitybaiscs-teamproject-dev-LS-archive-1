@@ -16,7 +16,7 @@ namespace OverTheSky.Gimmicks.Platforms
 
         private void Start()
         {
-            // ½ÃÀÛ ½Ã ¹ßÆÇÀÌ ÀÌµ¿ÇÒ À§Ä¡¸¦ Á¤ÇØÁÜ
+            // ì‹œì‘ ì‹œ ë°œíŒì´ ì´ë™í•  ìœ„ì¹˜ë¥¼ ì •í•´ì¤Œ
             _currentLocate = _targetPointA;
         }
 
@@ -30,7 +30,7 @@ namespace OverTheSky.Gimmicks.Platforms
 
         private void Move()
         {
-            // ³Î ·¹ÆÛ·±½º ÀÍ¼Á¼Ç ¿À·ù°¡ ¶°¼­ nullÀÌ ¾Æ´Ò ¶§¸¸ ½ÇÇàÇÏµµ·Ï
+            // ë„ ë ˆí¼ëŸ°ìŠ¤ ìµì…‰ì…˜ ì˜¤ë¥˜ê°€ ë– ì„œ nullì´ ì•„ë‹ ë•Œë§Œ ì‹¤í–‰í•˜ë„ë¡
             if (_currentLocate != null)
             {
                 transform.position = Vector3.MoveTowards(transform.position, _currentLocate.position, _moveSpeed * Time.deltaTime);
@@ -39,22 +39,22 @@ namespace OverTheSky.Gimmicks.Platforms
 
         private void OnTriggerEnter(Collider other)
         {
-            // 'PingPongTargetA'¿Í Ãæµ¹ ½Ã _targetPointB·Î ÀÌµ¿
+            // 'PingPongTargetA'ì™€ ì¶©ëŒ ì‹œ _targetPointBë¡œ ì´ë™
             if (other.name == "WaypointPlatformA")
             {
                 _currentLocate = _targetPointB;
             }
-            // 'PingPongTargetB'¿Í Ãæµ¹ ½Ã _targetPoinC·Î ÀÌµ¿
+            // 'PingPongTargetB'ì™€ ì¶©ëŒ ì‹œ _targetPoinCë¡œ ì´ë™
             else if (other.name == "WaypointPlatformB")
             {
                 _currentLocate = _targetPointC;
             }
-            // 'PingPongTargetC'¿Í Ãæµ¹ ½Ã _targetPoinD·Î ÀÌµ¿
+            // 'PingPongTargetC'ì™€ ì¶©ëŒ ì‹œ _targetPoinDë¡œ ì´ë™
             else if (other.name == "WaypointPlatformC")
             {
                 _currentLocate = _targetPointD;
             }
-            // 'PingPongTargetD'¿Í Ãæµ¹ ½Ã _targetPoinA·Î ÀÌµ¿
+            // 'PingPongTargetD'ì™€ ì¶©ëŒ ì‹œ _targetPoinAë¡œ ì´ë™
             else if (other.name == "WaypointPlatformD")
             {
                 _currentLocate = _targetPointA;

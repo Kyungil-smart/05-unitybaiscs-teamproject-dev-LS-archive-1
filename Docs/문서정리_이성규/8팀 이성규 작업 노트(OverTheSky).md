@@ -421,7 +421,32 @@ Vector3.ProjectOnPlane을 사용하여 경사면에서도 속도 감소 없이 �
 - 게임 시작 시 Start()에서 Cursor.lockState = CursorLockMode.Locked를 설정하여 마우스 커서를 숨기고 화면 중앙에 고정.
 - ESC 키 입력 시 커서 잠금을 해제(ToggleCursor)하여 UI 조작이 가능하도록 편의성 추가.
 - 추후 게임 매니저로 해당 기능을 이전할 수도 있음
+
+### 2026-01-30
+
+#### 팀원 코드 리뷰 및 체크
+주말의 병합 작업을 위해서 미리 체크 및 팀원들에게 전반적인 리뷰 사항 공유<br>
+깃허브 관련 작업 및 주말 병합 작업 준비
+
+### 2026-01-31
+
+#### GameManager 작성
+기존 CameraController에 있던 커서 제어 기능을 GameManager로 이관하여 역할 분리(SRP) 수행.<br>
+커서록을 컨트롤하는 입력 키 InputManager에 추가함<br>
+모든 입력 관련 키는 InputManager에서 컨트롤
+```cs
+CancelInput { get; private set; }
+CancelInput = Input.GetKeyDown(KeyCode.Escape);
+```
+프리팹이 필요없는 매니저는 게임 매니저에서 자식으로 계층구조를 설정하고 자동 생성<br>
+인스펙터 설정이나 프리팹으로 들어가는 매니저는 게임매니저 오브젝트 아래 자식으로 배치<br>
+해당 상태로 게임 매니저 프리팹으로 만듬.<br>
+추후 타이틀씬에 게임매니저 프리팹 하나만 배치하면 매니저 스크립트 관리는 끝인 편리한 방식
+
+#### PlayerController 버그 수정
+못오르는 경사각 사이에 껴서 점프로 탈출 후, 혹은 급경사에서 점프 후 점프 애니메이션이 척지 후 한 번 더 재생되는 버그 수정
+- `OnLand()` 시에 `_anim.ResetTrigger(Define.Anim.IsJump)`를 실행하여 점프 트리거 초기화.
 ---
 
 **작성일**: 2026-01-24  
-**최종 수정**: 2026-01-29
+**최종 수정**: 2026-01-31

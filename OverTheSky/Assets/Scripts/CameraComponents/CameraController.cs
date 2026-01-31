@@ -90,9 +90,6 @@ namespace OverTheSky.CameraComponents
             // 현재 거리 초기화
             _currentDistance = _distance;
             _collisionDistance = _distance;
-            
-            // 커서 숨기기/잠그기
-            LockCursor(true);
         }
         
         private void LateUpdate()
@@ -116,15 +113,6 @@ namespace OverTheSky.CameraComponents
             
             // 카메라 위치/회전 업데이트
             UpdateCameraTransform();
-        }
-        
-        private void Update()
-        {
-            // ESC 키로 커서 토글
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                ToggleCursor();
-            }
         }
         
         #endregion
@@ -240,37 +228,6 @@ namespace OverTheSky.CameraComponents
             
             // 충돌 없으면 원래 거리
             return maxDistance;
-        }
-        
-        #endregion
-        
-        #region Cursor Control
-        
-        /// <summary>
-        /// 커서 잠금/해제
-        /// </summary>
-        /// <param name="locked">true: 잠금, false: 해제</param>
-        private void LockCursor(bool locked)
-        {
-            if (locked)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-        }
-        
-        /// <summary>
-        /// 커서 상태 토글
-        /// </summary>
-        private void ToggleCursor()
-        {
-            bool isLocked = Cursor.lockState == CursorLockMode.Locked;
-            LockCursor(!isLocked);
         }
         
         #endregion

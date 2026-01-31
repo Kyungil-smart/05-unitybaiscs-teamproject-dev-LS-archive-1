@@ -1,17 +1,14 @@
-using System;
 using UnityEngine;
 
 namespace OverTheSky.Core
 {
     public class InputManager : Singleton<InputManager>
     {
-        public event Action<Vector2> OnMove; 
-        public event Action<bool> OnSprintKeyDown;
-        public event Action<bool> OnJumpKeyDown;
-        
         // 현재 입력 상태
         public Vector2 MoveInput { get; private set; }
         public bool SprintKeyDown { get; private set; }
+        
+        public bool CancelInput { get; private set; }
         
         // 점프 입력 버퍼 - FixedUpdate에서 소비할 때까지 유지
         private bool _jumpBuffered = false;
@@ -53,6 +50,8 @@ namespace OverTheSky.Core
             {
                 _jumpBuffered = true;
             }
+            
+            CancelInput = Input.GetKeyDown(KeyCode.Escape);
         }
         
         public void SetInputActive(bool active)
@@ -63,6 +62,7 @@ namespace OverTheSky.Core
                 MoveInput = Vector2.zero; 
                 SprintKeyDown = false;
                 _jumpBuffered = false;
+                CancelInput = false;
             }
         }
     }
