@@ -1,8 +1,10 @@
 using OverTheSky.Core;
 using UnityEngine;
+using Logger = OverTheSky.Core.Logger;
 
 namespace OverTheSky.Player
 {
+    [RequireComponent(typeof(ForceReceiver))]
     public class PlayerController : PlayerBase
     {
         [Header("Movement Settings")] 
@@ -30,11 +32,18 @@ namespace OverTheSky.Player
         private Vector2 _currentMoveInput;
         private bool _isSprinting;
         private Camera mainCamera;
+        
+        // 충격 리시버
+        private ForceReceiver _forceReceiver;
 
         protected override void Awake()
         {
             base.Awake();
             mainCamera = Camera.main;
+            // ForceReceiver 가져오기 (없으면 추가)
+            _forceReceiver = GetComponent<ForceReceiver>();
+            if (_forceReceiver == null) _forceReceiver = gameObject.AddComponent<ForceReceiver>();
+            
             SetupFrictionlessMaterial();
         }
         
@@ -140,12 +149,12 @@ namespace OverTheSky.Player
                     // 공중에서는 기존대로 감속 (관성 유지)
                     float deceleration = _acceleration * _airControlFactor;
                     _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, Vector3.zero, deceleration * Time.fixedDeltaTime);
-                    _rigidbody.velocity = new Vector3(_horizontalVelocity.x, _verticalVelocity, _horizontalVelocity.z);
                 }
-                return;
+                // return;
             }
             else
             {
+                // 입력이 있을때
                 Vector3 moveDirection = GetCameraRelativeMovement(_currentMoveInput);
                 
                 if (moveDirection.magnitude > 0.01f)
@@ -163,14 +172,19 @@ namespace OverTheSky.Player
                 float currentAcceleration = IsGrounded ? _acceleration : _acceleration * _airControlFactor;
                 _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, targetVelocity, currentAcceleration * Time.fixedDeltaTime);
             }
+            // 최종 속도 적용 단계
+            
             // 플레이어의 자체 이동 속도 (입력 + 중력)
             Vector3 playerVelocity = new Vector3(_horizontalVelocity.x, _verticalVelocity, _horizontalVelocity.z);
-
-            // 발판의 속도 계산
-            Vector3 platformVelocity = Vector3.zero;
             
-            //최종 속도 = 내 속도 + 발판 속도
-            _rigidbody.velocity = playerVelocity + platformVelocity;
+            // 발판의 속도 계산
+            // Vector3 platformVelocity = Vector3.zero;
+            
+            // 내 이동 속도 + 수직 속도 + (외부 컴포넌트가 계산해준 외부 충격량)
+            Vector3 finalVelocity = playerVelocity + _forceReceiver.Movement;
+            
+            _rigidbody.velocity = finalVelocity;
+            // _rigidbody.velocity = playerVelocity + platformVelocity + _impactVelocity;
             // _rigidbody.velocity = new Vector3(_horizontalVelocity.x, _verticalVelocity, _horizontalVelocity.z);
 #if UNITY_EDITOR
             if (_showDebugLog)

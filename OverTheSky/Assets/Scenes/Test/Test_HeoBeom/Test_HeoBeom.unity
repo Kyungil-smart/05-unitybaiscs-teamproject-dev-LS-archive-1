@@ -600,7 +600,6 @@ GameObject:
   - component: {fileID: 1530197099}
   - component: {fileID: 1530197098}
   - component: {fileID: 1530197097}
-  - component: {fileID: 1530197096}
   m_Layer: 3
   m_Name: PingPongPlatformTile
   m_TagString: Untagged
@@ -623,21 +622,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2077271071}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1530197096
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1530197094}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddfd3af3f2d592f4597d48237c49bf34, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _moveSpeed: 0
-  _targetPointA: {fileID: 676553838}
-  _targetPointB: {fileID: 1861991579}
 --- !u!54 &1530197097
 Rigidbody:
   m_ObjectHideFlags: 0
