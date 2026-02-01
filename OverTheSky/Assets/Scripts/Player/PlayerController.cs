@@ -1,4 +1,6 @@
+using System;
 using OverTheSky.Core;
+using OverTheSky.Gimmicks.Platforms;
 using UnityEngine;
 using Logger = OverTheSky.Core.Logger;
 
@@ -33,8 +35,8 @@ namespace OverTheSky.Player
         private bool _isSprinting;
         private Camera mainCamera;
         
-        // 충격 리시버
-        private ForceReceiver _forceReceiver;
+        private ForceReceiver _forceReceiver; // 충격 리시버
+        private IMovingPlatform _currentPlatform; // 밟고 있는 발판
 
         protected override void Awake()
         {
@@ -76,6 +78,35 @@ namespace OverTheSky.Player
             UpdateAnimation();
         }
         
+        // 발판 감지: 태그 비교 대신 인터페이스 유무로 판단
+        private void OnCollisionEnter(Collision collision)
+        {
+            var platform = collision.gameObject.GetComponent<IMovingPlatform>();
+            if (platform != null) _currentPlatform = platform;
+        }
+        
+        private void OnCollisionStay(Collision collision)
+        {
+            // 혹시 Enter가 무시될 경우를 대비해 Stay에서도 체크
+            if (_currentPlatform == null)
+            {
+                var platform = collision.gameObject.GetComponent<IMovingPlatform>();
+                if (platform != null) _currentPlatform = platform;
+            }
+        }
+        
+        // 발판에서 내리면 해제
+        private void OnCollisionExit(Collision collision)
+        {
+            var platform = collision.gameObject.GetComponent<IMovingPlatform>();
+            if (platform == _currentPlatform) _currentPlatform = null;
+        }
+
+        public void Update()
+        {
+            UIManager.Instance?.UpdateHeight(transform.position.y);
+        }
+
         private void ReadInput()
         {
             if (InputManager.Instance == null) return;
@@ -178,10 +209,15 @@ namespace OverTheSky.Player
             Vector3 playerVelocity = new Vector3(_horizontalVelocity.x, _verticalVelocity, _horizontalVelocity.z);
             
             // 발판의 속도 계산
-            // Vector3 platformVelocity = Vector3.zero;
+            Vector3 platformVelocity = Vector3.zero;
+            // 발판 위에 있다면, 플레이어 발 밑 위치의 속도를 받아옴
+            if (_currentPlatform != null)
+            {
+                platformVelocity = _currentPlatform.GetVelocityAtPoint(transform.position);
+            }
             
             // 내 이동 속도 + 수직 속도 + (외부 컴포넌트가 계산해준 외부 충격량)
-            Vector3 finalVelocity = playerVelocity + _forceReceiver.Movement;
+            Vector3 finalVelocity = playerVelocity + platformVelocity + _forceReceiver.Movement;
             
             _rigidbody.velocity = finalVelocity;
             // _rigidbody.velocity = playerVelocity + platformVelocity + _impactVelocity;

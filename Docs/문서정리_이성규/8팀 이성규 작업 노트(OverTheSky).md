@@ -528,7 +528,11 @@ SmoothMotion 코루틴도 ForceReceiver의 AddImpact 방식에 맞게 수정<br>
 
 #### 기믹 상호작용 수정(Merge)
 
-****
+**BasePlatform을 사용하는 팀원 코드 호환 작업**
+Velocity 기반 PlatformBase 구현을 사용하지 않은 팀원의 이동 발판의 플레이어 캐릭터와 호환을 위해 PlatformBase에 IMovingPlatform 인터페이스를 추가하고 캐릭터에서 IMovingPlatform을 통해 속도 값을 얻어올 수 있도록 수정.<br>
+IMovingPlatform을 BasePlatform에 상속시킴<br>
+이를 통해 팀원 코드의 수정을 최소화함
+
 
 ---
 
