@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using OverTheSky.Core;
 using UnityEngine;
 
 namespace OverTheSky.Gimmicks.Obstacles.Object
@@ -34,6 +35,21 @@ namespace OverTheSky.Gimmicks.Obstacles.Object
         {
             if (other.gameObject.CompareTag("Player"))
             {
+                // 리지드바디 대신 ForceReceiver를 가져옴.
+                ForceReceiver receiver = other.gameObject.GetComponent<ForceReceiver>();
+
+                if (receiver != null)
+                {
+                    // freezeRotation은 PlayerController가 이미 관리하므로 건드리지 말기.
+                    // player.freezeRotation = true; 
+                    
+                    // 힘 벡터 합치기 (앞으로 미는 힘 + 위로 띄우는 힘)
+                    Vector3 knockbackForce = (transform.forward * _pushForce) + (Vector3.up * _upForce);
+                    
+                    // AddImpact 호출
+                    receiver.AddImpact(knockbackForce);
+                }
+                /*
                 Rigidbody player = other.gameObject.GetComponent<Rigidbody>();
 
                 if (player != null)
@@ -43,6 +59,8 @@ namespace OverTheSky.Gimmicks.Obstacles.Object
                     player.AddForce(transform.forward * _pushForce, ForceMode.VelocityChange);
                     player.AddForce(Vector3.up * _upForce, ForceMode.VelocityChange);
                 }
+                */
+                
             }
         }
     }
