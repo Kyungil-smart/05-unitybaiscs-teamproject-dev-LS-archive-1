@@ -19,7 +19,7 @@ namespace OverTheSky.Gimmicks.Platforms
 
         private void Rotate()
         {
-            // pivotÀÇ YÃàÀ» ±âÁØÀ¸·Î ´Ù¸¥ ¿ÀºêÁ§Æ®°¡ °øÀüÀ» ÇÒ ¼ö ÀÖµµ·Ï ÇÔ
+            // pivotì˜ Yì¶•ì„ ê¸°ì¤€ìœ¼ë¡œ ë‹¤ë¥¸ ì˜¤ë¸Œì íŠ¸ê°€ ê³µì „ì„ í•  ìˆ˜ ìˆë„ë¡ í•¨
             transform.RotateAround(_pivot.transform.position, Vector3.up, _rotateSpeed * Time.deltaTime);
         }
     }

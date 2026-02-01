@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace OverTheSky.Gimmicks.Platforms
 {
-    // Áßº¹µÇ´Â ÄÚµåµé »ó¼Ó¹ŞÀ¸·Á°í µû·Î »°½À´Ï´Ù.
+    // ì¤‘ë³µë˜ëŠ” ì½”ë“œë“¤ ìƒì†ë°›ìœ¼ë ¤ê³  ë”°ë¡œ ëºìŠµë‹ˆë‹¤.
     public class BasePlatform : MonoBehaviour
     {
         protected Vector3 _lastPosition;
@@ -12,10 +12,10 @@ namespace OverTheSky.Gimmicks.Platforms
 
         protected void MovePassenger()
         {
-            // ¹ßÆÇÀÇ ÀÌµ¿ °Å¸®¸¦ °è»ê
+            // ë°œíŒì˜ ì´ë™ ê±°ë¦¬ë¥¼ ê³„ì‚°
             Vector3 platformMoveDistance = transform.position - _lastPosition;
 
-            // ÇÃ·¹ÀÌ¾î°¡ ¿Ã¶óÅ¸¸é °°ÀÌ ÀÌµ¿
+            // í”Œë ˆì´ì–´ê°€ ì˜¬ë¼íƒ€ë©´ ê°™ì´ ì´ë™
             if (_playerRigidbody != null)
             {
                 _playerRigidbody.MovePosition(_playerRigidbody.position + platformMoveDistance);
@@ -25,7 +25,7 @@ namespace OverTheSky.Gimmicks.Platforms
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.CompareTag("Player"))
-            {   // ÇÃ·¹ÀÌ¾îÀÇ Rigidbody ÄÄÆ÷³ÍÆ®¸¦ ÂüÁ¶
+            {   // í”Œë ˆì´ì–´ì˜ Rigidbody ì»´í¬ë„ŒíŠ¸ë¥¼ ì°¸ì¡°
                 _playerRigidbody = collision.gameObject.GetComponent<Rigidbody>();
             }
         }
