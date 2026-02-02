@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(menuName = "SkyData",fileName = "SkyData")]
+[CreateAssetMenu(menuName = "SkyData",fileName = "SkyBox_")]
 public class SkyBoxData : ScriptableObject
 {
     [SerializeField] private Cubemap a;

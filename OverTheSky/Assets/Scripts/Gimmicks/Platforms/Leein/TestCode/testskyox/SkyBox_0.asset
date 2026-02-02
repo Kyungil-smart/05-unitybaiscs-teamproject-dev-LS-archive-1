@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2134fcb7de21d864e84849682f706c52, type: 3}
-  m_Name: SkyData 2
+  m_Name: SkyBox_0
   m_EditorClassIdentifier: 
-  a: {fileID: 8900000, guid: 656a59a5ff93c46498416d97e5c16b66, type: 3}
-  index: 3
+  a: {fileID: 8900000, guid: e71fc492f440446b99875b8e1df890ba, type: 3}
+  index: 0

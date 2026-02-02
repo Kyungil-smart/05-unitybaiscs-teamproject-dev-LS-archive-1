@@ -34,15 +34,18 @@ public class SkyboxHeightTransition : MonoBehaviour
     void Update()
     {
          p_idx = (int)player.transform.position.y / N;
-        if (p_idx != index )
-        {
-            index=p_idx;
+       
+         
             if (CurrentCoroutine ==null)
             {
-                if (CurrentSkybox == skydic[p_idx]) return;
+                if (skydic.TryGetValue(p_idx, out var skybox))
+                {
+                    if(CurrentSkybox == skybox) 
+                            return;
+                }
                 CurrentCoroutine = StartCoroutine(OnChangeSkyBox());
             }
-        }
+     
     }
     private IEnumerator OnChangeSkyBox()
     {
