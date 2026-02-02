@@ -11,7 +11,6 @@ namespace OverTheSky.Core
     public class UIManager : Singleton<UIManager>
     {
         [SerializeField] private TimeUI _timeUI;
-        [SerializeField] private MessageUI _messageUI;
         [SerializeField] private HeightUI _heightUI;
         
         protected override void Awake()
@@ -20,10 +19,11 @@ namespace OverTheSky.Core
         }
 
         // Player에 y값을 받아와 HeightUI에 값을 넘기는 부분
-        public void UpdateHeight(float height)
+        public void UpdateUI(float height)
         {
             int _height = (int)height;
             _heightUI.UpdateHeight(_height);
+            _timeUI.UpdateTime();
         }
     }
 }
