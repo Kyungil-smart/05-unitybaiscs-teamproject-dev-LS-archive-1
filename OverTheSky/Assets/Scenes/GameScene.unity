@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 71f14a2d79f732f4d9893ef1b911f4ff, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 0ecc251b00096cf409e373a2664a0846, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -372,6 +372,111 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e3ffaa5c43570439b262eb6110bd62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &53748460
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 457776141242119670, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: N
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 457776141242119670, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1501823462}
+    - target: {fileID: 457776141242119670, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: _defaultCubeA
+      value: 
+      objectReference: {fileID: 8900000, guid: e71fc492f440446b99875b8e1df890ba, type: 3}
+    - target: {fileID: 457776141242119670, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: skyDatas.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 457776141242119670, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: skyDatas.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: ae155301921e97f4f82d719beea38e3d, type: 2}
+    - target: {fileID: 457776141242119670, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: skyDatas.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 3ebe4bdd20e0bd14ea74b0470e28b624, type: 2}
+    - target: {fileID: 457776141242119670, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: skyDatas.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: ae1828de52ca51e41b7813f455c95c4c, type: 2}
+    - target: {fileID: 457776141242119670, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: skyDatas.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: 69d43c4574ede824eaf660c6ce67ab81, type: 2}
+    - target: {fileID: 457776141242119670, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: skyDatas.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: a09aae96396b07f41b96fb35e70c11ce, type: 2}
+    - target: {fileID: 457776141242119670, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: skyDatas.Array.data[5]
+      value: 
+      objectReference: {fileID: 11400000, guid: 3ebe4bdd20e0bd14ea74b0470e28b624, type: 2}
+    - target: {fileID: 457776141242119670, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: skyDatas.Array.data[6]
+      value: 
+      objectReference: {fileID: 11400000, guid: ae1828de52ca51e41b7813f455c95c4c, type: 2}
+    - target: {fileID: 457776141242119670, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: skyDatas.Array.data[7]
+      value: 
+      objectReference: {fileID: 11400000, guid: 69d43c4574ede824eaf660c6ce67ab81, type: 2}
+    - target: {fileID: 3938478204512132471, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938478204512132471, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 80.93
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938478204512132471, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938478204512132471, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938478204512132471, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938478204512132471, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938478204512132471, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938478204512132471, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938478204512132471, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938478204512132471, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4412566529109335690, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
+      propertyPath: m_Name
+      value: SkyBoxController
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b0fe5f8d2e1fac84cbfd297c8a4fc07b, type: 3}
 --- !u!43 &71543472
 Mesh:
   m_ObjectHideFlags: 0
@@ -1477,12 +1582,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b86417ed2e8c5448a26b4b62832c92e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _defaultCubeA: {fileID: 0}
   skyDatas:
   - {fileID: 11400000, guid: 8fc023cb09e26ef4c958b1d4c7379410, type: 2}
   - {fileID: 11400000, guid: 0cf392e15362f4548b7c6ea329944104, type: 2}
   - {fileID: 11400000, guid: a1349d0184bafb44ab3d54e1b4401547, type: 2}
   player: {fileID: 1501823462}
-  p_idx: 0
   N: 3
 --- !u!1001 &487559170
 PrefabInstance:
@@ -9799,3 +9904,4 @@ SceneRoots:
   - {fileID: 1501823461}
   - {fileID: 1683139395}
   - {fileID: 1025693741}
+  - {fileID: 53748460}
