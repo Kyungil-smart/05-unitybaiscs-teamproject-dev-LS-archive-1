@@ -104,7 +104,7 @@ namespace OverTheSky.Player
 
         public void Update()
         {
-            UIManager.Instance?.UpdateHeight(transform.position.y);
+            UIManager.Instance?.UpdateUI(transform.position.y);
         }
 
         private void ReadInput()
