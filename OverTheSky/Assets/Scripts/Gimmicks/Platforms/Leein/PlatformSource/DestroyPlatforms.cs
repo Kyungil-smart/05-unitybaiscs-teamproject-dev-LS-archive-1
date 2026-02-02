@@ -37,7 +37,7 @@ public class DestroyPlatforms : MonoBehaviour
     {
         //플레이가 발판 밟았을 때 실행용
         //밟았다가 다시 밟아서 한번 더 실행되지 않게 설정 
-        if (collision.gameObject.CompareTag("Platform"))
+        if (collision.gameObject.CompareTag("Ground"))
         {
             _active.ActiveSelf(_platforms.respawnTime);
             this.gameObject.SetActive(false);
