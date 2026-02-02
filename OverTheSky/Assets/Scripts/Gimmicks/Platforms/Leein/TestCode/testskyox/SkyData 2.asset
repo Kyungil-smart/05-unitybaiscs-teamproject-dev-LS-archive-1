@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: SkyData 2
   m_EditorClassIdentifier: 
   a: {fileID: 8900000, guid: 656a59a5ff93c46498416d97e5c16b66, type: 3}
-  index: 2
+  index: 3

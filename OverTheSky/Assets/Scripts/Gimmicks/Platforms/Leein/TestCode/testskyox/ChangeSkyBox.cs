@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ChangeSkyBox : MonoBehaviour
 {
+    [SerializeField] private Cubemap _defaultCubeA;
+    [SerializeField] private Cubemap _defaultCubeB;
+
     [SerializeField] private Cubemap cubeA;
     [SerializeField] private Cubemap cubeB;
     Material sky;
@@ -11,8 +14,11 @@ public class ChangeSkyBox : MonoBehaviour
    
     void Start()
     {
-        if (cubeA == null) return;
         sky = RenderSettings.skybox;
+        sky.SetTexture("_CubeA", _defaultCubeA);
+        sky.SetTexture("_CubeB", _defaultCubeB);
+        if (cubeA == null) return;
+       
         
         sky.SetTexture("_CubeA", cubeA);
         sky.SetTexture("_CubeB", cubeB);

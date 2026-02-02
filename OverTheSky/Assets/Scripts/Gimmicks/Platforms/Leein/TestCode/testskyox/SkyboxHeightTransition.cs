@@ -6,6 +6,10 @@ using UnityEngine.ProBuilder.Shapes;
 
 public class SkyboxHeightTransition : MonoBehaviour
 {
+    [SerializeField] private Cubemap _defaultCubeA;
+    //[SerializeField] private Cubemap _defaultCubeB;
+
+
     [SerializeField]private List<SkyBoxData> skyDatas = new List<SkyBoxData>();
     [SerializeField] private Transform player;
     private Dictionary<int , Cubemap> skydic=new Dictionary<int , Cubemap>();
@@ -15,21 +19,22 @@ public class SkyboxHeightTransition : MonoBehaviour
     int index = 0;
     float time = 0;
      private Coroutine CurrentCoroutine;
-    public int p_idx;
+    private int p_idx;
     [SerializeField] private int N;
     void Start()
     {
         skydic = skyDatas.ToDictionary(x => x.idx, x => x.nextskybox);
         sky = RenderSettings.skybox;
-       // sky.SetTexture("_CubeB", CurrentSkybox);
-        index= - 1;
+        sky.SetTexture("_CubeA", _defaultCubeA);
+        sky.SetFloat("_Blend",0f);
+        index = - 1;
     }
 
     // Update is called once per frame
     void Update()
     {
          p_idx = (int)player.transform.position.y / N;
-        if (p_idx != index)
+        if (p_idx != index )
         {
             index=p_idx;
             if (CurrentCoroutine ==null)

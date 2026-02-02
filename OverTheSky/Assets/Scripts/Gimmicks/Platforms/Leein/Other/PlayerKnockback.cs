@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using OverTheSky.Core;
 public class PlayerKnockback : MonoBehaviour
 {
  
@@ -10,15 +10,17 @@ public class PlayerKnockback : MonoBehaviour
     [SerializeField] private Rigidbody _rigid;
     [SerializeField] private bool colision;
     [SerializeField] Vector3 power;
+  
     private void OnTriggerEnter(Collider other)
     {
         if(!other.gameObject.CompareTag("Player"))
             return;
         power = _rigid.velocity;
         Rigidbody rb;
+        ForceReceiver forceReceiver;
         if (!other.gameObject.TryGetComponent(out rb)) return;
-
-        rb.AddForce(-other.transform.forward * _Power, ForceMode.Impulse);
+        if (!other.gameObject.TryGetComponent(out forceReceiver));
+        forceReceiver.AddImpact(other.transform.right* _Power);
         Debug.Log("넉백실행");
         colision = true;
     }
