@@ -1220,7 +1220,7 @@ MonoBehaviour:
   _sprintSpeed: 6
   _acceleration: 15
   _rotationSpeed: 10
-  _jumpHeight: 1.2
+  _jumpHeight: 1.5
   _gravity: -15
   _airControlFactor: 0.3
   _showDebugLog: 0
