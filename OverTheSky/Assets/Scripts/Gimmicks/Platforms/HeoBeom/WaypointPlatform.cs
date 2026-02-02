@@ -47,18 +47,18 @@ namespace OverTheSky.Gimmicks.Platforms
             // 'PingPongTargetB'와 충돌 시 _targetPoinC로 이동
             else if (other.name == "WaypointPlatformB")
             {
-                _currentLocate = _targetPointC;
-            }
-            // 'PingPongTargetC'와 충돌 시 _targetPoinD로 이동
-            else if (other.name == "WaypointPlatformC")
-            {
-                _currentLocate = _targetPointD;
-            }
-            // 'PingPongTargetD'와 충돌 시 _targetPoinA로 이동
-            else if (other.name == "WaypointPlatformD")
-            {
                 _currentLocate = _targetPointA;
             }
+            // 'PingPongTargetC'와 충돌 시 _targetPoinD로 이동
+            // else if (other.name == "WaypointPlatformC")
+            // {
+            //     _currentLocate = _targetPointD;
+            // }
+            // // 'PingPongTargetD'와 충돌 시 _targetPoinA로 이동
+            // else if (other.name == "WaypointPlatformD")
+            // {
+            //     _currentLocate = _targetPointA;
+            // }
         }
     }
 }

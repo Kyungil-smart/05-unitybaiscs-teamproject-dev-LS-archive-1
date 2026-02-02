@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70ebbe81f4c516a478b6b770354503f1, type: 3}
   m_Name: FallingObject_
   m_EditorClassIdentifier: 
-  m_Time: 5
-  m_respawnTime: 3
+  m_Time: 0
+  m_isTriggeredByPlayer: 0
+  m_respawnTime: 1.5
   _AddForcePower: 36.9
