@@ -10,7 +10,7 @@ namespace OverTheSky.Gimmicks.Obstacles
 {
     public class RotatingObstacle : MonoBehaviour
     {
-        [SerializeField][Range(0, 200)] private float _rotateSpeed;
+        [SerializeField][Range(0, 500)] private float _rotateSpeed;
         [SerializeField][Range(0, 10)] private float _hitForce;
         [SerializeField] private LayerMask _layerMask;
 

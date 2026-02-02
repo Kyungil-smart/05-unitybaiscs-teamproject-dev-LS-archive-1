@@ -15,7 +15,6 @@ namespace OverTheSky.Core
             SceneManager.LoadScene(sceneName);
         }
 
-
         public string GetCurrentSceneName()
         {
             return SceneManager.GetActiveScene().name;
