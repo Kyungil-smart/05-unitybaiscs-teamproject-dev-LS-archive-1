@@ -120,7 +120,7 @@ UI 표시용으로 필수 설치
 
 ![alt text](image-7.png)
 
-- 충돌을 계산하는데 있어 중요할 Capsule 콜라이더 및 Rigdbody를 캐릭터에 추가.
+- 충돌을 계산하는데 있어 중요할 Capsule 콜라이더 및 Rigidbody를 캐릭터에 추가.
 - plane 메쉬 콜라이더 삭제하고 Box 콜라이더 추가로 충돌 계산 성능 최적화.
   - 충돌을 안정적으로 하기 위해 아래로 콜라이더 두께를 늘릴 수 도 있음
 
@@ -238,7 +238,331 @@ https://youtu.be/0USXRC9f4Iw?si=bAmTEeBBeiI8qeQg
   - `CurrentVelocity` 프로퍼티를 통해 발판의 현재 이동 속도를 계산하여 노출.
   - 추후 플레이어 컨트롤러에서 이 값을 읽어와 플레이어 속도에 더해줌으로써, 움직이는 발판 위에서 미끄러지는 현상 해결 예정.
 
+#### 프로젝트 초기 환경 구축 및 협업 툴 셋업
+강사진 제공 깃허브 저장소에 기존에 작업한 문서(Docs) 및 프로젝트 파일 이동
+
+#### 팀원 배포 및 가이드
+리포지토리 URL 공유 및 초기 세팅 가이드라인 안내 완료.
+
+#### Define 코어 스크립트 작성
+- 전역적으로 사용하는 상수(Constant) 및 열거형(Enum) 정의.
+- 팀원들이 기능 구현 시 쉽게 참조할 수 있도록 develop 브랜치에 선반영.
+
+
+#### 협업툴 Notion 템플릿을 받아 셋업 진행
+데일리 스크럼, 일정, 회고등의 기능을 활용할 수 있음.
+기존 작성된 마크다운 문서를 노션 페이지에 옮겨 작성
+
+### 2026-01-28
+
+#### 플레이어 제작
+
+**플레이어 물리 코어(PlayerBase) 스크립트 작성**
+![alt text](image-12.png)
+`PlayerController`가 상속받을 부모 클래스<br>
+우선 플레이어 관련 스크립트의 기반이자 플레이어가 가져야할 정보를 가진 `PlayerBase` 스크립트를 작성한다.
+
+필요기능
+- 컴포넌트 캐싱 (References)
+  - Rigidbody, Animator, CapsuleCollider 등 필수 컴포넌트를 미리 Awake에서 잡아주고 컨트롤러에서 가져다 쓰기.
+  - Rigidbody 설정을 코드에서 제어 (Interpolate, FreezeRotation, UseGravity: False 등)
+- 땅 체크 로직 (Ground Check)
+- 캐릭터 상태값 (State Properties)
+  - IsGrounded 등의 상태 변경으로 OnLand, OnFall 등의 이벤트 발생
+작업 순서
+- 자식 사용을 위한 컴포넌트
+- 플레이어가 붙은게 땅, 천장, 벽인지 판단 필요
+- 경사로 체크용 노말 벡터 변수: 기본적으로는 `Vector3.up;`
+- FixedUpdate에서 CheckGround,  CheckCeiling 함수 호출
+- CheckGround 함수
+  - SphereCast로 바닥 감지
+  - 땅에 닿는 순간 / 떨어지는 순간 이벤트 처리용 가상함수 호출
+- 씬뷰 테스트를 위한 기즈모 추가
+- 바닥 판정을 개발 중 Sphere 반지름과 Cast 거리 문제로 offset 값이 작을시 바닥 판정을 못하고 구가 바닥에 닿기 전 Cast가 끝나는 문제 확인
+- 정확히 플레이어 캡슐 콜라이더의 바닥 기준점 계산
+- 충돌 구체 위치를 `캡슐 바닥 + 구 반지름 위치`로 잡음
+- 캐스트 거리: 반지름 + 체크 오프셋
+
+- SphereCast는 시작부터 겹쳐있으면 감지 못하는 점을 개선
+  - 물리 엔진은 중력 때문에 캐릭터를 바닥 안으로 아주 살짝 파고들게 했다가, 다시 위로 밀어낸다. 이때 Sphere가 바닥 콜라이더 내부에 파묻혀 있는 순간 Physics.SphereCast는 "이미 겹쳐 있는 콜라이더"는 감지하지 못하고 무시해버린다. 그래서 땅이 없다고 판단해 Fall이 뜬다.
+  - Raycast의 시작점을 몸통 중앙으로 변경하고, 탐지 거리를 (키 절반) - (반지름) + (오프셋)으로 재계산하여 내부에서부터 쏘는 방식으로 변경. 시작점이 파묻히는 문제 해결.
+- 바닥에 닿는 순간 종종 OnLand 다음 OnFall이 호출되는 경우가 생김
+  - 바운싱 의심
+    - 디바운싱 (Debouncing) 로직 추가
+    - 그라운드 체크에 시간을 둬서 바닥에 닿고 짧은 시간 이내에는 아직 바닥에 있는걸로 판정한다.
+    - 코요테 타임(Coyote Time)으로 체크하여 바닥에서 떨어져도 0.1초 동안은 땅에 닿은 상태로 취급하여 판정을 완화하고. 바운싱으로 인해 땅에 있는지 여부가 편하는 것을 방지한다.
+    - 즉시 떨어지지 않고 공중에 떠서 점프할 수 있을 때 까지의 시간으로도 쓸 수 있다.
+- 레이 충돌을 통해 얻은 노말값을 통해 경사면 체크 및 천장 체크 추가.
+- 디버깅용 기즈모 설정.
+  - Ground SphereCast
+    - 바닥: 녹색 / 벽: 마젠타 / 그 외: 적색
+  - 시작 구 (캡슐 내부), 끝 구 (바닥 닿는 곳), 둘 사이 연결 선
+  - Ceiling(천장) 체크 영역 시각화
+  - Ground Normal 시각화
+  - Handles.Label로 경사각 표시
+
+**Normal 판정 임계값**
+1. GROUND_NORMAL_THRESHOLD = 0.7f (바닥 판정) 이유:
+   - Unity 캐릭터 컨트롤러 매뉴얼의 Slope Limit 개념과 유사.
+   - 수학적 의미: 바닥의 위쪽 방향 벡터(Normal)와 캐릭터의 위쪽 방향(Vector3.up)을 내적했을 때 결과가 0.7 이상이어야 한다.각도 기준: cos^{-1}(0.7)은 약 45도. 즉, 경사도가 45도보다 완만한 곳만 바닥으로 인정하고 그보다 가파르면 '벽'으로 간주해 미끄러지게 만든다. 
+2. CEILING_NORMAL_THRESHOLD = -0.1f (천장 판정) 이유:
+   - 머리 위의 물체가 단순한 경사면인지, 실제 진행을 방해하는 천장인지를 구분.
+   - 수학적 의미: 바닥 벡터가 아래쪽을 향할 때(음수 값), 그 값이 -0.1보다 작으면(예: -0.5, -1.0) 천장으로 판정.
+
+### 2026-01-29
+
+플레이어의 조작감 향상을 위한 Input System 재설계, 물리 기반 캐릭터 컨트롤러 구현, 그리고 3인칭 카메라 시스템 구축. Rigidbody의 마찰과 항력(Drag)을 제거하고, 자체적인 속도 계산 로직을 적용함.
+
+#### InputManager 제작
+
+플레이어의 기초 스크립트를 만들었으니 플레이어 컨트롤러를 작성하기 전 입력을 관리할 InputManager를 제작한다.
+
+입력 로직과 캐릭터 제어 로직을 분리
+
+싱글톤 패턴으로 전역적 접근 가능
+
+우선 입력 값을 프로퍼티로 설정해 입력값이 들어와 값이 변할때 이벤트를 호출하게 한다.
+
+프로퍼티 변수와 `Action`을 사용한 변화 감지형 옵저버 패턴
+
+벡터 정규화(.normalized)를 통해 일정한 이동속도 구현
+
+OnMove, OnJump, Sprint 이벤트를 통해 외부에서 이벤트 할당하는 방식으로 개발 가능
+
+**입력 차단 구현**
+- SetInputActive(bool) 함수를 통해 컷신, UI 팝업 등 특정 상황에서 입력을 원천 차단.
+- 차단 시 이동 벡터를 Zero로 초기화하여 캐릭터가 계속 움직이는 현상 방지.
+
+프로퍼티의 set 접근자 내부에 if (value != _currentValue) 조건을 추가로 이벤트 호출 빈도 최적화
+
+초기에는 Action을 활용한 옵저버 패턴(값이 변할 때만 이벤트 호출)으로 설계했으나, FixedUpdate와의 동기화 및 반응성 문제를 해결하기 위해 Polling(매 프레임 확인) + Buffering 방식으로 변경함.
+- 입력 버퍼(Input Buffer) 도입
+  - 점프 같은 단발성 입력이 물리 연산 프레임(FixedUpdate)과 엇갈려 씹히는 현상을 방지.
+  - Update에서 GetKeyDown을 감지하여 버퍼(_jumpBuffered)를 true로 만들고, FixedUpdate에서 소비(ConsumeJump)하는 방식 적용.
+- 입력 차단(Input Blocking):
+  - SetInputActive(bool) 함수 구현. 컷신이나 UI 팝업 시 입력을 원천 차단하고 이동 벡터를 초기화하여 캐릭터가 계속 미끄러지는 현상 방지.
+
+#### PlayerController 구현
+3인칭 게임이므로 카메라를 기준으로 이동을 구현할 필요가 있다.
+
+Camera.main의 forward/right 벡터를 기준으로 입력값을 변환하여, 카메라가 보는 방향을 기준으로 캐릭터가 이동하도록 구현.
+```cs
+private Vector3 GetCameraRelativeMovement(Vector2 input)
+{
+    Transform cameraTransform = mainCamera.transform;
+    Vector3 forward = cameraTransform.forward;
+    Vector3 right = cameraTransform.right;
+    
+    forward.y = 0f;
+    right.y = 0f;
+    forward.Normalize();
+    right.Normalize();
+    
+    return (forward * input.y + right * input.x).normalized;
+}
+```
+
+Vector3.ProjectOnPlane을 사용하여 경사면에서도 속도 감소 없이 이동 방향을 유지.
+
+문제 해결(트러블 슈팅)
+
+- 물리엔진 고뇌
+  - 땅에서 움직이지 않거나 뻑뻑함 (Friction 문제)
+  - 현상: 이동 입력이 있어도 캐릭터가 제자리에서 꿈쩍하지 않거나, 아주 느리게 이동함.
+  - 원인: CapsuleCollider의 기본 마찰력(Friction)과 Rigidbody의 Drag가 이동 힘을 상쇄시킴.
+  - 해결: 
+    - 동적 물리 재질(PhysicMaterial) 생성: Awake에서 마찰력(Friction)과 탄성(Bounciness)이 0인 재질을 생성하여 콜라이더에 할당.
+    - 수동 속도 제어: 마찰력을 없앤 대신, 입력이 없을 때 코드에서 직접 Velocity를 0으로 감속(Deceleration)하여 미끄러짐 방지.
+- 점프 높이가 너무 낮음 (Drag 문제)
+  - 현상: JumpForce를 줘도 바닥에 붙어있는 듯이 점프가 낮음.
+  - 원인: Rigidbody.drag 값을 높게(15) 설정했더니 공중에서도 저항이 걸려 솟구치는 힘이 즉시 상쇄됨.
+  - 해결:
+    - _rigidbody.drag = 0f로 고정.
+    - 코드 레벨에서 공기 저항을 땅과 다른 값으로 동적으로 제어함
+- 경사면 끼임 및 무한 등반 (Slope & Wall Issue)
+  - 현상: 못 오르는 급경사에 끼어서 캐릭터가 허우적대거나, 점프를 연타하여 벽을 타고 오르는 버그 발생.
+  - 해결:
+    - 탈출 점프 허용: IsGrounded가 false라도 어딘가 밟고 있다면(SlopeAngle > 0) 점프를 허용하여 끼임 현상 탈출 유도.
+    - 벽 반동(Wall Kick): 급경사에서 점프 시, 벽의 법선 벡터(Normal) 방향으로 캐릭터를 밀어내어(PushBack) 무한 등반 꼼수 방지.
+
+**중력 및 접지 안정화**
+- ApplyGravity 로직 개선:
+  - 경사면을 내려갈 때 캐릭터가 붕 뜨는 현상을 막기 위해, 땅에 있을 때는 -2f (경사면에 따라 0f)의 약한 중력을 지속적으로 가해 접지력을 유지.
+  - 실행 순서 확립: ProcessJump() -> ApplyGravity() -> Move() 순으로 처리하여 점프 직후 중력에 의해 속도가 깎이는 문제 방지.
+
+#### CameraController 구현
+기본 기능: 타겟(플레이어) 추적, 마우스 회전, 휠 줌인/아웃.
+충돌 처리: SphereCast를 사용하여 카메라와 플레이어 사이에 벽이 있을 경우, 카메라를 플레이어 쪽으로 당겨 시야가 가려지는 현상 방지.
+
+플레이어를 따라다니는 전형적인 3인칭 숄더뷰/쿼터뷰 카메라를 구현. LateUpdate를 사용하여 플레이어의 이동이 끝난 후 카메라가 따라가도록 하여 떨림 현상을 방지함.
+
+- 타겟 추적 (Target Follow):
+  - 플레이어의 위치(_target)에 높이 오프셋(_height)을 더한 지점을 구심점으로 설정.
+  - Vector3.Lerp를 사용하여 카메라가 타겟을 부드럽게(_smoothSpeed) 따라가도록 구현.
+  - 다행히도 사용한 플레이어 모델링에 카메라 추적을 위한 오브젝트가 있어 편하게 해당 지점을 추적 위치로 설정함.
+  ![alt text](image-13.png)
+- 궤도 회전 (Orbit Rotation):
+  - 마우스 입력을 받아 오일러 각(Euler Angles) 기반으로 회전 (Quaternion.Euler).
+  - Yaw (Y축): 마우스 좌우 입력으로 360도 회전.
+  - Pitch (X축): 마우스 상하 입력으로 회전하되, Mathf.Clamp를 사용하여 상단 70도, 하단 -30도로 각도를 제한(땅을 뚫거나 머리 위로 넘어가는 현상 방지).
+- 줌 인/아웃 (Zoom):
+  - 마우스 스크휠(Mouse ScrollWheel) 입력으로 카메라와 타겟 사이의 거리(_currentDistance)를 조절.
+  - 최소/최대 거리(_minDistance, _maxDistance)를 설정하여 과도한 줌 방지.
+
+**벽 충돌 처리 (Collision Detection)**<br>
+카메라와 플레이어 사이에 벽이나 장애물이 있을 경우, 카메라가 벽을 뚫고 나가는 현상을 방지하고 플레이어 쪽으로 당겨지는 로직 구현.
+- 사용 로직: 역방향 SphereCast
+- 시작점: 플레이어(Target) 위치
+- 방향: 카메라가 있어야 할 위치 방향
+- 방법: Physics.SphereCast를 발사하여 장애물이 감지되면, 충돌 지점(hit.distance)까지만 거리를 유지하고 카메라를 앞으로 당김.
+- SphereCast 사용 이유: 일반 Raycast는 선(Line) 판정이라 얇은 벽이나 모서리에서 카메라가 벽을 파고드는 클리핑(Clipping) 현상이 발생할 수 있음. 반지름(_cameraRadius)을 가진 구체를 쏘아 카메라의 볼륨만큼 공간을 확보함.
+
+**커서 제어** (UX)**
+- 게임 시작 시 Start()에서 Cursor.lockState = CursorLockMode.Locked를 설정하여 마우스 커서를 숨기고 화면 중앙에 고정.
+- ESC 키 입력 시 커서 잠금을 해제(ToggleCursor)하여 UI 조작이 가능하도록 편의성 추가.
+- 추후 게임 매니저로 해당 기능을 이전할 수도 있음
+
+### 2026-01-30
+
+#### 팀원 코드 리뷰 및 체크
+주말의 병합 작업을 위해서 미리 체크 및 팀원들에게 전반적인 리뷰 사항 공유<br>
+깃허브 관련 작업 및 주말 병합 작업 준비
+
+### 2026-01-31
+
+#### GameManager 작성
+기존 CameraController에 있던 커서 제어 기능을 GameManager로 이관하여 역할 분리(SRP) 수행.<br>
+커서록을 컨트롤하는 입력 키 InputManager에 추가함<br>
+모든 입력 관련 키는 InputManager에서 컨트롤
+```cs
+CancelInput { get; private set; }
+CancelInput = Input.GetKeyDown(KeyCode.Escape);
+```
+프리팹이 필요없는 매니저는 게임 매니저에서 자식으로 계층구조를 설정하고 자동 생성<br>
+인스펙터 설정이나 프리팹으로 들어가는 매니저는 게임매니저 오브젝트 아래 자식으로 배치<br>
+해당 상태로 게임 매니저 프리팹으로 만듬.<br>
+추후 타이틀씬에 게임매니저 프리팹 하나만 배치하면 매니저 스크립트 관리는 끝인 편리한 방식
+
+#### PlayerController 버그 수정
+못오르는 경사각 사이에 껴서 점프로 탈출 후, 혹은 급경사에서 점프 후 점프 애니메이션이 착지 후 한 번 더 재생되는 버그 수정
+- `OnLand()` 시에 `_anim.ResetTrigger(Define.Anim.IsJump)`를 실행하여 점프 트리거 초기화.
+
+#### 병합 작업 진행 전 사소한 수정
+오류를 발생 시키는 충돌 코드 수정<br>
+GameManager에서 싱글톤 매니저를 생성(호출)하고 GameManager의 자식으로 넣는 제네릭 함수를 만들어 InitializeManagers 함수 가독성 및 유지 보수 편의성 향상
+
+불필요한 SceneLoader 발견 후 일정 기능 SceneManager로 이동 및 해당 코드 레거시화
+![alt text](image-14.png)
+```cs
+// [AddComponentMenu("")] : 유니티 에디터 'Add Component' 메뉴에서 검색 안 되게 숨김
+[System.Obsolete("이 클래스는 더 이상 사용되지 않습니다. OverTheSky.Core.SceneController를 대신 사용하세요.")]
+[AddComponentMenu("")]
+```
+해당 기능을 통해 인스펙터에서 경고창으로 사용되지 않는 코드임을 알리고 에디터상에서 해당 코드 추가를 방지함.
+
+#### TitleUIManager 제작
+TitleUIManager를 통해 타이틀 씬의 버튼에 AddListener로 필요 동작 추가<br>
+인스펙터 연결 방식 대신 AddListener를 사용하여 SceneController와 안전하게 연동
+
+#### 테스트 동작을 위한 작업
+Define에 정의된 씬 이름(상수)을 기반으로 실제 빌드에 사용할 씬 흐름(Title → Game) 구성
+싱글톤 매니저들의 씬 전환시 정상 작동 확인.
+
+### 2026-02-01
+
+#### 작업물 복구 및 문제점 해결
+깃허브 충돌 과정에서 팀원 작업 결과 누락 확인<br>
+과거 시점 프로젝트 파일을 zip 파일로 받아 필요한 파일만 패키지로 복구<br>
+해당 작업물이 URP에셋을 사용함을 확인.<br>
+마티리얼 변경 작업 진행<br>
+
+#### 카메라 쉐이크 기능 정상 동작을 위한 수정
+
+**계층 구조 최적화**
+```cs
+Player (타겟)
+...
+[CameraRig] (빈 오브젝트)  <-- 'CameraController' 스크립트
+ └─ CameraShakePivot (빈 오브젝트) <--'ShakingRandomLoop' 부착
+     └─ Main Camera (카메라)
+```
+- CameraRig 세팅:
+  - 작성한 CameraController 스크립트를 여기에 붙인다.
+  - Target: Player를 넣는다.
+  - 이제 마우스를 돌리면 CameraRig가 플레이어 주변을 돈다.
+    - 실제 카메라는 자식이니 따라 돈다.
+- CameraShakePivot 세팅:
+  - ShakingRandomLoop 스크립트를 여기에 붙인다.
+  - Camera Shake Target: 자기 자신(CameraShakePivot)의 Transform을 넣거나 비워둔다(스크립트가 알아서 찾음).
+  - 이렇게 하면 CameraRig가 큰 움직임을 잡고, 그 안에서 Pivot이 의도에 따라 떨린다.
+- Main Camera:
+  - 자식으로 들어가 Rig의 움직임에 따라 움직인다.
+
+#### 외부 충격(Impact)을 처리할 변수와 함수 추가
+PlayerController가 FixedUpdate에서 _rigidbody.velocity를 매 프레임 직접 덮어쓰고(Override) 있기 때문에, 유니티의 기본 물리 엔진인 AddForce를 사용하면 그 힘이 적용된 직후 다음 프레임에 바로 초기화되어버린다.<br>
+따라서 **외부 충격을 저장하는 변수**를 따로 만들고, 이를 이동 로직에 합산하는 방식으로 해결한다.
+
+**수정 포인트**
+- _impactVelocity 변수 추가 (외부 충격 저장용)
+- AddImpact() 메서드 추가 (외부에서 호출용)
+- Move() 메서드에서 _impactVelocity를 합산하고 감쇠(Damping) 시키기
+- 최종 속도 계산 시 입력 이동 벡터 + 외부 충격 벡터를 합산하여 적용.
+- 입력이 없을 때(MoveInput == 0) return 해버리는 로직을 수정하여, 가만히 서 있을 때도 충격이 적용되도록 Move() 함수 로직 수정.
+
+**구조 개선 (ForceReceiver 분리)**
+PlayerController가 너무 복잡해지는 현상 확인<br>
+따라서 ForceReceiver라는 별도의 스크립트를 통해 Force를 받아 계산하는 스크립트 추가
+
+플레이어 컨트롤러가 해당 컴포넌트를 필수로 요구하도록 수정
+
+- AddImpact(): 외부에서 힘(Force)과 모드(Impulse/Force 등)를 받아 충격 속도 계산.
+- FixedUpdate(): 충격량을 시간에 따라 부드럽게 감쇠(Damping/Lerp) 처리.
+
+#### 기믹 상호작용 수정(Merge)
+
+**RotatingObstacle 수정**
+기존 Rigidbody 참조 방식에서 ForceReceiver 컴포넌트를 감지하는 방식으로 변경 (플레이어 전용).<br>
+SmoothMotion 코루틴도 ForceReceiver의 AddImpact 방식에 맞게 수정<br>
+
+### 2026-02-02
+
+#### 기믹 상호작용 수정(Merge)
+**BasePlatform을 사용하는 팀원 코드 호환 작업**
+Velocity 기반 PlatformBase 구현을 사용하지 않은 팀원의 이동 발판의 플레이어 캐릭터와 호환을 위해 PlatformBase에 IMovingPlatform 인터페이스를 추가하고 캐릭터에서 IMovingPlatform을 통해 속도 값을 얻어올 수 있도록 수정.<br>
+IMovingPlatform을 BasePlatform에 상속시킴<br>
+이를 통해 팀원 코드의 수정을 최소화함
+
+**차량(Vehicle) 기믹 물리 통합**
+기존 AddForce 방식의 넉백을 ForceReceiver 방식으로 수정.
+
+#### UI 및 시스템 구조 통합
+팀원의 UI매니저 스크립트를 캔버스 프리팹으로 통합후 게임매니저 프리팹에 자식으로 넣어 관리 편의성 향상
+
+#### 레벨 디자인 및 통합 테스트
+- 기믹/오브젝트 통합 배치
+- 개별적으로 개발된 기믹(이동 발판, 차량, 리스폰 포인트 등)을 하나의 테스트 씬(Test_Merge)에 통합 배치.
+- Map 구조물과 플레이어 간의 충돌 및 등반 테스트 완료.
+- 리스폰 시스템 검증
+- 체크포인트 시스템과 플레이어 리스폰 시 물리 초기화 로직 정상 작동 확인.
+- 프리팹화(Prefabs)
+- 최종 수정된 플레이어 및 통합된 기믹들을 프리팹으로 저장하여 협업 시 충돌 방지.
+
+#### 프로젝트 기능 통합 리뷰 및 레벨 디자인 협력
+- 기능 통합 리뷰 및 빌드 검증: 화면 공유를 통해 팀원들과 통합된 기능의 정상 동작을 확인하고 빌드본 정상 동작을 체크함.
+- 레벨 디자인 협업: 개발된 기믹이 실제 맵에서 의도대로 동작하는지 확인하며, 팀원들과 실시간 소통을 통해 오브젝트 배치 및 난이도 조절 협업을 진행함.
+![alt text](<Image Sequence_003_0000.jpg>)
+
+### 2026-02-03
+
+#### 문서 작업 및 발표 자료 작성
+- 최종 기술 문서 작성: 각자 개인 작업노트 최종 정리 및 트러블 슈팅, 회고록 등 문서 작업 진행
+
+- 발표 자료 제작
+  - 팀원이 찍은 기믹별 플레이 영상을 받아 취합해 통합 영상으로 편집
+  - 팀원들이 작성한 개별 문서를 검토하여 발표에 적합한 핵심 내용 선별 및 병합.
+  - 미리캔버스를 활용하여 PPT 양식으로 최종 발표 자료 작성
+
 ---
 
 **작성일**: 2026-01-24  
-**최종 수정**: 2026-01-26
+**최종 수정**: 2026-02-03
