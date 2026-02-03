@@ -120,7 +120,7 @@ UI 표시용으로 필수 설치
 
 ![alt text](image-7.png)
 
-- 충돌을 계산하는데 있어 중요할 Capsule 콜라이더 및 Rigdbody를 캐릭터에 추가.
+- 충돌을 계산하는데 있어 중요할 Capsule 콜라이더 및 Rigidbody를 캐릭터에 추가.
 - plane 메쉬 콜라이더 삭제하고 Box 콜라이더 추가로 충돌 계산 성능 최적화.
   - 충돌을 안정적으로 하기 위해 아래로 콜라이더 두께를 늘릴 수 도 있음
 
@@ -265,7 +265,7 @@ https://youtu.be/0USXRC9f4Iw?si=bAmTEeBBeiI8qeQg
 필요기능
 - 컴포넌트 캐싱 (References)
   - Rigidbody, Animator, CapsuleCollider 등 필수 컴포넌트를 미리 Awake에서 잡아주고 컨트롤러에서 가져다 쓰기.
-  - Rigidbody 설정을 코드000에서 제어 (Interpolate, FreezeRotation, UseGravity: False 등)
+  - Rigidbody 설정을 코드에서 제어 (Interpolate, FreezeRotation, UseGravity: False 등)
 - 땅 체크 로직 (Ground Check)
 - 캐릭터 상태값 (State Properties)
   - IsGrounded 등의 상태 변경으로 OnLand, OnFall 등의 이벤트 발생
@@ -444,12 +444,12 @@ CancelInput = Input.GetKeyDown(KeyCode.Escape);
 추후 타이틀씬에 게임매니저 프리팹 하나만 배치하면 매니저 스크립트 관리는 끝인 편리한 방식
 
 #### PlayerController 버그 수정
-못오르는 경사각 사이에 껴서 점프로 탈출 후, 혹은 급경사에서 점프 후 점프 애니메이션이 척지 후 한 번 더 재생되는 버그 수정
+못오르는 경사각 사이에 껴서 점프로 탈출 후, 혹은 급경사에서 점프 후 점프 애니메이션이 착지 후 한 번 더 재생되는 버그 수정
 - `OnLand()` 시에 `_anim.ResetTrigger(Define.Anim.IsJump)`를 실행하여 점프 트리거 초기화.
 
 #### 병합 작업 진행 전 사소한 수정
 오류를 발생 시키는 충돌 코드 수정<br>
-GameManeger에서 싱글톤 매니저를 생성(호출)하고 GameManager의 자식으로 넣는 제네릭 함수를 만들어 InitializeManagers 함수 가독성 및 유지 보수 편의성 향상
+GameManager에서 싱글톤 매니저를 생성(호출)하고 GameManager의 자식으로 넣는 제네릭 함수를 만들어 InitializeManagers 함수 가독성 및 유지 보수 편의성 향상
 
 불필요한 SceneLoader 발견 후 일정 기능 SceneManager로 이동 및 해당 코드 레거시화
 ![alt text](image-14.png)
@@ -547,7 +547,22 @@ IMovingPlatform을 BasePlatform에 상속시킴<br>
 - 프리팹화(Prefabs)
 - 최종 수정된 플레이어 및 통합된 기믹들을 프리팹으로 저장하여 협업 시 충돌 방지.
 
+#### 프로젝트 기능 통합 리뷰 및 레벨 디자인 협력
+- 기능 통합 리뷰 및 빌드 검증: 화면 공유를 통해 팀원들과 통합된 기능의 정상 동작을 확인하고 빌드본 정상 동작을 체크함.
+- 레벨 디자인 협업: 개발된 기믹이 실제 맵에서 의도대로 동작하는지 확인하며, 팀원들과 실시간 소통을 통해 오브젝트 배치 및 난이도 조절 협업을 진행함.
+![alt text](<Image Sequence_003_0000.jpg>)
+
+### 2026-02-03
+
+#### 문서 작업 및 발표 자료 작성
+- 최종 기술 문서 작성: 각자 개인 작업노트 최종 정리 및 트러블 슈팅, 회고록 등 문서 작업 진행
+
+- 발표 자료 제작
+  - 팀원이 찍은 기믹별 플레이 영상을 받아 취합해 통합 영상으로 편집
+  - 팀원들이 작성한 개별 문서를 검토하여 발표에 적합한 핵심 내용 선별 및 병합.
+  - 미리캔버스를 활용하여 PPT 양식으로 최종 발표 자료 작성
+
 ---
 
 **작성일**: 2026-01-24  
-**최종 수정**: 2026-02-02
+**최종 수정**: 2026-02-03
