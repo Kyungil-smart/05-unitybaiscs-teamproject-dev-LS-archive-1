@@ -73,27 +73,28 @@
 
 ## 문서 바로가기
 
-## OverTheSky 프로젝트 가이드 문서
+### 팀 문서
+#### OverTheSky 프로젝트 가이드 문서
 [![OverTheSky 프로젝트 가이드 문서](https://img.shields.io/badge/Team_Guide-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs/OverTheSky%20프로젝트%20가이드%20문서.md)
 
-## OverTheSky 프로젝트 역할분담 문서
+#### OverTheSky 프로젝트 역할분담 문서
 [![OverTheSky 프로젝트 역할분담 문서](https://img.shields.io/badge/Team_Role-Click_Here-orange?style=for-the-badge&logo=readme)](./Docs/OverTheSky%20프로젝트%20역할%20분담%20문서.md)
 
-## 작업노트
+### 작업노트
 
-이성규<br>
+**이성규**<br>
 [![작업노트-이성규](https://img.shields.io/badge/작업_노트-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs/문서정리_이성규/8팀%20이성규%20작업%20노트(OverTheSky).md)
 [![작업회고-이성규](https://img.shields.io/badge/회고_문서-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs/문서정리_이성규/OverTheSky_유니티%20팀%20협업%20프로젝트%20회고(이성규).md)
 [![R&D 문서-이성규](https://img.shields.io/badge/R&D_문서-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs/문서정리_이성규/OverTheSky_R&D%20문서_이성규.md)
 
-김동현<br>
+**김동현**<br>
 [![작업노트-김동현](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs/문서정리_김동현/8팀_김동현_작업노트.md)
 
-이인<br>
+**이인**<br>
 [![작업노트-이인](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs/문서정리_이인)
 
-조규민<br>
+**조규민**<br>
 [![작업노트-조규민](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs/문서정리_조규민/8팀_조규민_작업노트.md)
 
-허범<br>
+**허범**<br>
 [![작업노트-허범](https://img.shields.io/badge/Work_Note-Click_Here-blue?style=for-the-badge&logo=readme)](./Docs/문서정리_허범/8팀%20허범%20작업노트.md)
